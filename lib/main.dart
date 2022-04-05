@@ -56,6 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _isInteger = true;
   bool _isSymbol = false;
   String _charset = '';
+  String _errortext = '';
 
   bool isCheckedsmall = false;
   BuildPassArea() {
@@ -169,8 +170,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final double deviceWidth = MediaQuery.of(context).size.width;
-    final double deviceWidth3 = deviceWidth / 2.5;
-    final double deviceWidth4 = deviceWidth / 10;
 
     return Scaffold(
       appBar: AppBar(
@@ -208,13 +207,34 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(0, 0, 50, 0),
-                    child: Text(
-                      '$_length',
-                      style: const TextStyle(fontSize: 25),
+                  Expanded(
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      decoration: InputDecoration(
+                          hintText: '$_length', errorText: _errortext),
+                      onChanged: (text) {
+                        if (int.tryParse(text) != null &&
+                            int.parse(text) > 0 &&
+                            int.parse(text) < 65) {
+                          print('First text field: $text');
+                          setState(() {
+                            _length = int.parse(text);
+                            _currentSliderValue = double.parse(text);
+                            _errortext = '';
+                          });
+                        } else {
+                          setState(() {
+                            _errortext = 'Please';
+                          });
+                        }
+                      },
                     ),
-                  ),
+                  )
+                  // child: Text(
+                  //   '$_length',
+                  //   style: const TextStyle(fontSize: 25),
+                  // ),
                 ]),
                 const SizedBox(height: 20),
                 Row(children: [
