@@ -41,7 +41,7 @@ class _SybolPage extends State<SybolPage> {
         ),
         body: ListView(children: [
           Row(children: [
-            Expanded(flex: 1, child: SizedBox()),
+            Expanded(flex: 1, child: Container()),
             Expanded(
               flex: 5,
               child: ElevatedButton(
@@ -58,7 +58,7 @@ class _SybolPage extends State<SybolPage> {
                 },
               ),
             ),
-            Expanded(flex: 1, child: SizedBox()),
+            Expanded(flex: 1, child: Container()),
             Expanded(
               flex: 5,
               child: ElevatedButton(
@@ -75,7 +75,7 @@ class _SybolPage extends State<SybolPage> {
                 },
               ),
             ),
-            Expanded(flex: 1, child: SizedBox()),
+            Expanded(flex: 1, child: Container()),
           ]),
           for (final key in symbolMap.keys)
             Row(
