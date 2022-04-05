@@ -77,38 +77,36 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget BuildPartCheckbox(bool ischeck, String partPass, String partExample,
-      double partWidth, double partFontsize) {
-    return Container(
-        alignment: Alignment.center,
-        margin: const EdgeInsets.all(10),
-        padding: const EdgeInsets.all(5),
-        width: partWidth,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.green),
-          borderRadius: BorderRadius.circular(20),
-          color: (ischeck) ? Colors.green.shade800 : Colors.white,
+  Widget BuildPartCheckbox(bool ischeck, String partPass, String partExample) {
+    return Row(
+      children: [
+        Transform.scale(
+            scale: 1.5,
+            child: (ischeck)
+                ? const Icon(
+                    Icons.task_alt_outlined,
+                    color: Colors.black,
+                  )
+                : const Icon(Icons.radio_button_unchecked_outlined,
+                    color: Colors.black)),
+        Container(
+          width: 10,
         ),
-        child: Row(
-          children: [
-            Transform.scale(
-                scale: 1.2,
-                child: (ischeck)
-                    ? const Icon(Icons.task_alt_outlined)
-                    : const Icon(Icons.radio_button_unchecked_outlined)),
-            // Expanded(child: Container()),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(
-                partPass,
-                style: const TextStyle(fontSize: 20),
-              ),
-              Text(
-                partExample,
-                style: const TextStyle(color: Colors.grey),
-              ),
-            ]),
-          ],
-        ));
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            partPass,
+            style: const TextStyle(fontSize: 20, color: Colors.black),
+          ),
+          Container(
+            height: 5,
+          ),
+          Text(
+            partExample,
+            style: const TextStyle(color: Colors.black),
+          ),
+        ]),
+      ],
+    );
   }
 
   Future<void> _generatePassword() async {
@@ -140,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _isBig == false &&
         _isInteger == false &&
         _isSymbol == false) {
-      _charset = 'a';
+      _charset = '*';
     }
 
     if (_length < 41) {
@@ -220,35 +218,72 @@ class _MyHomePageState extends State<MyHomePage> {
                 ]),
                 const SizedBox(height: 20),
                 Row(children: [
-                  ElevatedButton(
-                      onPressed: () => setState(() {
-                            _isSmall = !_isSmall;
-                          }),
-                      child: BuildPartCheckbox(_isSmall, 'small', '(abc...z)',
-                          deviceWidth3, deviceWidth4)),
-                  ElevatedButton(
-                      onPressed: () => setState(() {
-                            _isBig = !_isBig;
-                          }),
-                      child: BuildPartCheckbox(_isBig, 'big', '(ABC...Z)',
-                          deviceWidth3, deviceWidth4)),
+                  Expanded(flex: 1, child: Container()),
+                  Expanded(
+                      flex: 10,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: (_isSmall)
+                                ? Colors.green
+                                : Colors.green.shade50,
+                            side: const BorderSide(color: Colors.green),
+                          ),
+                          onPressed: () => setState(() {
+                                _isSmall = !_isSmall;
+                              }),
+                          child: BuildPartCheckbox(
+                              _isSmall, 'small', '(abc...z)'))),
+                  Expanded(flex: 1, child: Container()),
+                  Expanded(
+                      flex: 10,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary:
+                                (_isBig) ? Colors.green : Colors.green.shade50,
+                            side: const BorderSide(color: Colors.green),
+                          ),
+                          onPressed: () => setState(() {
+                                _isBig = !_isBig;
+                              }),
+                          child:
+                              BuildPartCheckbox(_isBig, 'big', '(ABC...Z)'))),
+                  Expanded(flex: 1, child: Container()),
                 ]),
+                Container(
+                  height: 10,
+                ),
                 Row(children: [
-                  Expanded(child: Container()),
-                  GestureDetector(
-                      onTap: () => setState(() {
-                            _isInteger = !_isInteger;
-                          }),
-                      child: BuildPartCheckbox(_isInteger, 'degit', '(012...9)',
-                          deviceWidth3, deviceWidth4)),
-                  Expanded(child: Container()),
-                  GestureDetector(
-                      onTap: () => setState(() {
-                            _isSymbol = !_isSymbol;
-                          }),
-                      child: BuildPartCheckbox(_isSymbol, 'symbol', '(#...)',
-                          deviceWidth3, deviceWidth4)),
-                  Expanded(child: Container()),
+                  Expanded(flex: 1, child: Container()),
+                  Expanded(
+                      flex: 10,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: (_isInteger)
+                                ? Colors.green
+                                : Colors.green.shade50,
+                            side: const BorderSide(color: Colors.green),
+                          ),
+                          onPressed: () => setState(() {
+                                _isInteger = !_isInteger;
+                              }),
+                          child: BuildPartCheckbox(
+                              _isInteger, 'integer', '(012...9)'))),
+                  Expanded(flex: 1, child: Container()),
+                  Expanded(
+                      flex: 10,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: (_isSymbol)
+                                ? Colors.green
+                                : Colors.green.shade50,
+                            side: const BorderSide(color: Colors.green),
+                          ),
+                          onPressed: () => setState(() {
+                                _isSymbol = !_isSymbol;
+                              }),
+                          child: BuildPartCheckbox(
+                              _isSymbol, 'symbol', '(#?!...)'))),
+                  Expanded(flex: 1, child: Container()),
                 ]),
                 const SizedBox(height: 20),
                 Container(
