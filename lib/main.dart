@@ -51,12 +51,22 @@ class _MyHomePageState extends State<MyHomePage> {
   double _currentSliderValue = 32;
   int _length = 32;
   double _passFontsize = 30;
+  final _partFontsize = 20;
   bool _isSmall = true;
   bool _isBig = true;
   bool _isInteger = true;
   bool _isSymbol = false;
   String _charset = '';
   String _errortext = '';
+
+// 1. ここでTextEditingControllerを持たせる
+  final myController = TextEditingController(); // textfield
+// 2. 必ずdispose()をoverrideして、作ったTextEditingControllerを廃棄する。
+  @override
+  void dispose() {
+    myController.dispose();
+    super.dispose();
+  }
 
   bool isCheckedsmall = false;
   BuildPassArea() {
@@ -192,28 +202,40 @@ class _MyHomePageState extends State<MyHomePage> {
                 BuildPassArea(),
                 Row(children: <Widget>[
                   Expanded(
+                    flex: 4,
                     child: Slider(
                       value: _currentSliderValue,
                       max: 64,
                       min: 1,
-                      // divisions: 10,
+                      divisions: 63,
                       label: _currentSliderValue.round().toString(),
                       onChanged: (double value) {
                         setState(() {
                           _currentSliderValue = value;
+                          myController.text = value.toInt().toString();
                           _length = value.toInt();
+
                           _generatePassword();
                         });
                       },
                     ),
                   ),
                   Expanded(
+                    flex: 1,
                     child: TextField(
+                      style: const TextStyle(fontSize: 25),
+
                       keyboardType: TextInputType.number,
                       // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       decoration: InputDecoration(
-                          hintText: '$_length', errorText: _errortext),
-                      onChanged: (text) {
+                        hintText: _length.toString(),
+                        errorText: _errortext,
+                        border: InputBorder.none,
+                      ),
+                      controller: myController,
+
+                      // onChanged: (text) {
+                      onSubmitted: (text) {
                         if (int.tryParse(text) != null &&
                             int.parse(text) > 0 &&
                             int.parse(text) < 65) {
@@ -225,7 +247,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           });
                         } else {
                           setState(() {
-                            _errortext = 'Please';
+                            _errortext = '1 to 64';
+                            myController.clear();
                           });
                         }
                       },
@@ -252,7 +275,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 _isSmall = !_isSmall;
                               }),
                           child: BuildPartCheckbox(
-                              _isSmall, 'small', '(abc...z)'))),
+                              _isSmall, 'Lower', '(abc...z)'))),
                   Expanded(flex: 1, child: Container()),
                   Expanded(
                       flex: 10,
@@ -266,7 +289,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 _isBig = !_isBig;
                               }),
                           child:
-                              BuildPartCheckbox(_isBig, 'big', '(ABC...Z)'))),
+                              BuildPartCheckbox(_isBig, 'Upper', '(ABC...Z)'))),
                   Expanded(flex: 1, child: Container()),
                 ]),
                 Container(
@@ -287,7 +310,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 _isInteger = !_isInteger;
                               }),
                           child: BuildPartCheckbox(
-                              _isInteger, 'integer', '(012...9)'))),
+                              _isInteger, 'Numbers', '(012...9)'))),
                   Expanded(flex: 1, child: Container()),
                   Expanded(
                       flex: 10,
@@ -302,7 +325,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 _isSymbol = !_isSymbol;
                               }),
                           child: BuildPartCheckbox(
-                              _isSymbol, 'symbol', '(#?!...)'))),
+                              _isSymbol, 'Symbols', '(#?!...)'))),
                   Expanded(flex: 1, child: Container()),
                 ]),
                 const SizedBox(height: 20),
@@ -359,7 +382,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // backgroundColor: Colors.green,
       // ),
       drawer: const Drawer(
-        child: const SybolPage(),
+        child: SybolPage(),
       ),
     );
   }
