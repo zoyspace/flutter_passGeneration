@@ -1,5 +1,3 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'ad_banner.dart';
 
@@ -47,13 +45,20 @@ class _MyHomePageState extends State<MyHomePage> {
   double _currentSliderValue = 32;
   int _length = 32;
   double _passFontsize = 30;
-  final _partFontsize = 20;
   bool _isSmall = true;
   bool _isBig = true;
   bool _isInteger = true;
+  bool _isSymbol = false;
+
   String _charset = '';
   String _errortext = '';
   bool _isSymbolAllFalse = false;
+
+  @override
+  void initState() {
+    //アプリ起動時に一度だけ実行される
+    _generatePassword();
+  }
 
 // 1. ここでTextEditingControllerを持たせる
   final myController = TextEditingController(); // textfield
@@ -137,13 +142,13 @@ class _MyHomePageState extends State<MyHomePage> {
     if (_isInteger) {
       _charset = _charset + integerSet;
     }
-    if (isSymbol) {
+    if (_isSymbol) {
       _charset = _charset + symbolSet;
     }
     if (_isSmall == false &&
         _isBig == false &&
         _isInteger == false &&
-        isSymbol == false) {
+        _isSymbol == false) {
       _charset = '*';
     }
 
@@ -311,22 +316,22 @@ class _MyHomePageState extends State<MyHomePage> {
                       flex: 10,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            primary: (isSymbol)
+                            primary: (_isSymbol)
                                 ? Colors.green
                                 : Colors.green.shade50,
                             side: const BorderSide(color: Colors.green),
                           ),
                           onPressed: () => setState(() {
-                                isSymbol = !isSymbol;
+                                _isSymbol = !_isSymbol;
                                 if (_isSymbolAllFalse == true &&
-                                    isSymbol == true) {
+                                    _isSymbol == true) {
                                   symbolMap.forEach((key, value) {
                                     symbolMap[key] = true;
                                   });
                                 }
                               }),
                           child: BuildPartCheckbox(
-                              isSymbol, '#?!...', ' Symbols'))),
+                              _isSymbol, '#?!...', ' Symbols'))),
                   Expanded(flex: 1, child: Container()),
                 ]),
                 const SizedBox(height: 50),
@@ -391,7 +396,7 @@ class _MyHomePageState extends State<MyHomePage> {
           });
           if (_isSymbolAllFalse) {
             setState(() {
-              isSymbol = false;
+              _isSymbol = false;
             });
           }
         }
