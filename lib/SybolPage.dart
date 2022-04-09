@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
 
+var isSymbol = false;
+
 Map symbolMap = <String, bool>{
   '-': true, //ハイフン
   '_': true, //アンダーバー
@@ -20,7 +22,6 @@ Map symbolMap = <String, bool>{
   ')': true,
   '~': true,
   '|': true,
-  'map': true,
 };
 
 class SybolPage extends StatefulWidget {
@@ -36,61 +37,87 @@ class _SybolPage extends State<SybolPage> {
     // print(symbolMap);
 
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Select symbol'),
-        ),
-        body: ListView(children: [
-          Row(children: [
-            Expanded(flex: 1, child: Container()),
-            Expanded(
-              flex: 5,
-              child: ElevatedButton(
-                child: const Text('All check'),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.lightGreen,
-                  onPrimary: Colors.white,
-                ),
-                onPressed: () {
-                  symbolMap.forEach((key, value) {
-                    symbolMap[key] = true;
-                  });
-                  setState(() {});
-                },
-              ),
+      appBar: AppBar(
+        title: const Text('Select symbol'),
+      ),
+      body: GridView.count(
+        primary: false,
+        padding: const EdgeInsets.all(10),
+        childAspectRatio: (2 / 1),
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        crossAxisCount: 3,
+        children: <Widget>[
+          ElevatedButton(
+            child: const Text('Select All'),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.lightGreen,
+              onPrimary: Colors.white,
             ),
-            Expanded(flex: 1, child: Container()),
-            Expanded(
-              flex: 5,
-              child: ElevatedButton(
-                child: const Text('All out'),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.lightGreen,
-                  onPrimary: Colors.white,
-                ),
-                onPressed: () {
-                  symbolMap.forEach((key, value) {
-                    symbolMap[key] = false;
-                  });
-                  setState(() {});
-                },
-              ),
+            onPressed: () {
+              symbolMap.forEach((key, value) {
+                symbolMap[key] = true;
+              });
+              setState(() {});
+            },
+          ),
+          ElevatedButton(
+            child: const Text('Release All'),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.lightGreen,
+              onPrimary: Colors.white,
             ),
-            Expanded(flex: 1, child: Container()),
-          ]),
+            onPressed: () {
+              symbolMap.forEach((key, value) {
+                symbolMap[key] = false;
+              });
+
+              setState(() {});
+            },
+          ),
           for (final key in symbolMap.keys)
-            Row(
-              children: [
-                Checkbox(
-                    value: symbolMap[key],
-                    onChanged: (value) {
-                      setState(() {
-                        symbolMap[key] = value!;
-                      });
-                    }),
-                Text(key),
-              ],
-            )
-          // for (final sym in symbolLists) Text(sym),
-        ]));
+            GestureDetector(
+                onTap: () {
+                  setState(() {
+                    symbolMap[key] = !symbolMap[key];
+                  });
+                },
+                child: Container(
+                    padding: const EdgeInsets.all(5.0),
+                    decoration: BoxDecoration(
+                      color: (symbolMap[key]) ? Colors.green : Colors.white,
+                      border: Border.all(color: Colors.green),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Row(
+                      children: [
+                        Transform.scale(
+                            scale: 1,
+                            child: (symbolMap[key])
+                                ? const Icon(
+                                    Icons.check_box_outlined,
+                                    color: Colors.black,
+                                  )
+                                : const Icon(
+                                    Icons.check_box_outline_blank_outlined,
+                                    color: Colors.black)),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          key,
+                          style: const TextStyle(
+                              fontSize: 30, color: Colors.black),
+                        ),
+                      ],
+                    ))),
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Close')),
+        ],
+      ),
+    );
   }
 }

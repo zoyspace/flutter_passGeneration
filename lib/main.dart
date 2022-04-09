@@ -1,14 +1,20 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'ad_banner.dart';
+
 import 'dart:math'; //random
 import 'package:flutter/services.dart'; // copy to clipboad
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-import 'NextPage.dart';
+// import 'NextPage.dart';
 import 'SybolPage.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
+
   runApp(const MyApp());
 }
 
@@ -21,17 +27,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'Password',
-      theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // Try running your application with "flutter run". You'll see the
-          // application has a blue toolbar. Then, without quitting the app, try
-          // changing the primarySwatch below to Colors.green and then invoke
-          // "hot reload" (press "r" in the console where you ran "flutter run",
-          // or simply save your changes to "hot reload" in a Flutter IDE).
-          // Notice that the counter didn't reset back to zero; the application
-          // is not restarted.
-          primarySwatch: Colors.green),
+      theme: ThemeData(primarySwatch: Colors.green),
       home: const MyHomePage(title: 'Password Generator'),
     );
   }
@@ -55,9 +51,9 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _isSmall = true;
   bool _isBig = true;
   bool _isInteger = true;
-  bool _isSymbol = false;
   String _charset = '';
   String _errortext = '';
+  bool _isSymbolAllFalse = false;
 
 // 1. ここでTextEditingControllerを持たせる
   final myController = TextEditingController(); // textfield
@@ -68,8 +64,8 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  bool isCheckedsmall = false;
-  BuildPassArea() {
+  // bool isCheckedsmall = false;
+  Container BuildPassArea() {
     return Container(
       alignment: Alignment.centerLeft,
       margin: const EdgeInsets.fromLTRB(10, 10, 10, 30),
@@ -88,37 +84,36 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget BuildPartCheckbox(bool ischeck, String partPass, String partExample) {
-    return Row(
-      children: [
-        Transform.scale(
-            scale: 1.5,
-            child: (ischeck)
-                ? const Icon(
-                    Icons.task_alt_outlined,
-                    color: Colors.black,
-                  )
-                : const Icon(Icons.radio_button_unchecked_outlined,
-                    color: Colors.black)),
-        Container(
-          width: 10,
-        ),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            partPass,
-            style: const TextStyle(fontSize: 20, color: Colors.black),
-          ),
+  Widget BuildPartCheckbox(bool ischeck, String partPass, String partExample) =>
+      Row(
+        children: [
+          Transform.scale(
+              scale: 1.5,
+              child: (ischeck)
+                  ? const Icon(
+                      Icons.task_alt_outlined,
+                      color: Colors.black,
+                    )
+                  : const Icon(Icons.radio_button_unchecked_outlined,
+                      color: Colors.black)),
           Container(
-            height: 5,
+            width: 10,
           ),
-          Text(
-            partExample,
-            style: const TextStyle(color: Colors.black),
-          ),
-        ]),
-      ],
-    );
-  }
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(
+              partPass,
+              style: const TextStyle(fontSize: 20, color: Colors.black),
+            ),
+            Container(
+              height: 5,
+            ),
+            Text(
+              partExample,
+              style: const TextStyle(color: Colors.black),
+            ),
+          ]),
+        ],
+      );
 
   Future<void> _generatePassword() async {
     const smallLetterSet = 'abcdefghijklmnopqrstuvwxyz';
@@ -142,13 +137,13 @@ class _MyHomePageState extends State<MyHomePage> {
     if (_isInteger) {
       _charset = _charset + integerSet;
     }
-    if (_isSymbol) {
+    if (isSymbol) {
       _charset = _charset + symbolSet;
     }
     if (_isSmall == false &&
         _isBig == false &&
         _isInteger == false &&
-        _isSymbol == false) {
+        isSymbol == false) {
       _charset = '*';
     }
 
@@ -182,6 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final double deviceWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
         title: Text(widget.title),
       ),
@@ -201,8 +197,9 @@ class _MyHomePageState extends State<MyHomePage> {
               children: <Widget>[
                 BuildPassArea(),
                 Row(children: <Widget>[
+                  const SizedBox(width: 10),
                   Expanded(
-                    flex: 4,
+                    flex: 7,
                     child: Slider(
                       value: _currentSliderValue,
                       max: 64,
@@ -214,6 +211,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           _currentSliderValue = value;
                           myController.text = value.toInt().toString();
                           _length = value.toInt();
+                          _errortext = '';
 
                           _generatePassword();
                         });
@@ -226,7 +224,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       style: const TextStyle(fontSize: 25),
 
                       keyboardType: TextInputType.number,
-                      // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       decoration: InputDecoration(
                         hintText: _length.toString(),
                         errorText: _errortext,
@@ -235,15 +233,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       controller: myController,
 
                       // onChanged: (text) {
-                      onSubmitted: (text) {
+                      onChanged: (text) {
                         if (int.tryParse(text) != null &&
                             int.parse(text) > 0 &&
                             int.parse(text) < 65) {
-                          print('First text field: $text');
+                          // print('First text field: $text');
                           setState(() {
                             _length = int.parse(text);
                             _currentSliderValue = double.parse(text);
                             _errortext = '';
+                            _generatePassword();
                           });
                         } else {
                           setState(() {
@@ -254,12 +253,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                     ),
                   )
-                  // child: Text(
-                  //   '$_length',
-                  //   style: const TextStyle(fontSize: 25),
-                  // ),
                 ]),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Row(children: [
                   Expanded(flex: 1, child: Container()),
                   Expanded(
@@ -275,7 +270,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 _isSmall = !_isSmall;
                               }),
                           child: BuildPartCheckbox(
-                              _isSmall, 'Lower', '(abc...z)'))),
+                              _isSmall, 'abc...z', ' Lower'))),
                   Expanded(flex: 1, child: Container()),
                   Expanded(
                       flex: 10,
@@ -289,7 +284,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 _isBig = !_isBig;
                               }),
                           child:
-                              BuildPartCheckbox(_isBig, 'Upper', '(ABC...Z)'))),
+                              BuildPartCheckbox(_isBig, 'ABC...Z', ' Upper'))),
                   Expanded(flex: 1, child: Container()),
                 ]),
                 Container(
@@ -310,25 +305,31 @@ class _MyHomePageState extends State<MyHomePage> {
                                 _isInteger = !_isInteger;
                               }),
                           child: BuildPartCheckbox(
-                              _isInteger, 'Numbers', '(012...9)'))),
+                              _isInteger, '012...9', ' Numbers'))),
                   Expanded(flex: 1, child: Container()),
                   Expanded(
                       flex: 10,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            primary: (_isSymbol)
+                            primary: (isSymbol)
                                 ? Colors.green
                                 : Colors.green.shade50,
                             side: const BorderSide(color: Colors.green),
                           ),
                           onPressed: () => setState(() {
-                                _isSymbol = !_isSymbol;
+                                isSymbol = !isSymbol;
+                                if (_isSymbolAllFalse == true &&
+                                    isSymbol == true) {
+                                  symbolMap.forEach((key, value) {
+                                    symbolMap[key] = true;
+                                  });
+                                }
                               }),
                           child: BuildPartCheckbox(
-                              _isSymbol, 'Symbols', '(#?!...)'))),
+                              isSymbol, '#?!...', ' Symbols'))),
                   Expanded(flex: 1, child: Container()),
                 ]),
-                const SizedBox(height: 20),
+                const SizedBox(height: 50),
                 Container(
                   margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                   width: deviceWidth,
@@ -336,54 +337,66 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: _generatePassword,
                     heroTag: 'hero1',
                     tooltip: 'generator',
-                    label: const Text('Refresh'),
-                    icon: const Icon(Icons.play_for_work),
+                    label: const Text('生成　generate'),
+                    icon: Transform.scale(
+                        scale: 2, child: const Icon(Icons.play_for_work)),
                     backgroundColor: Colors.greenAccent,
                   ),
                 ),
+                const SizedBox(height: 10),
                 Container(
                   margin: const EdgeInsets.fromLTRB(10, 0, 10, 60),
-                  width: deviceWidth / 2,
+                  width: deviceWidth,
                   child: FloatingActionButton.extended(
                     onPressed: copyToClipboad,
                     heroTag: 'hero2',
                     tooltip: 'copypass',
-                    label: const Text('copy'),
-                    icon: const Icon(Icons.copy_sharp),
+                    label: const Text('Copy'),
+                    icon: Transform.scale(
+                        scale: 1.5, child: const Icon(Icons.copy_sharp)),
                     // backgroundColor: Colors.greenAccent,
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(10, 0, 10, 60),
-                  width: deviceWidth / 2,
-                  child: FloatingActionButton.extended(
-                    tooltip: 'nextpage',
-                    heroTag: 'hero3',
-                    label: const Text('寄付'),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const NextPage()),
-                      );
-                    },
-                  ),
-                ),
+                // Container(
+                //   margin: const EdgeInsets.fromLTRB(10, 0, 10, 60),
+                //   width: deviceWidth / 2,
+                //   child: FloatingActionButton.extended(
+                //     tooltip: 'nextpage',
+                //     heroTag: 'hero3',
+                //     label: const Text('寄付'),
+                //     onPressed: () {
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //             builder: (context) => const NextPage()),
+                //       );
+                //     },
+                //   ),
+                // ),
               ],
             ),
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton.extended(
-      //   onPressed: copyToClipboad,
-      //   tooltip: 'passCopy',
-      //   label: const Text('copy'),
-      //   icon: const Icon(Icons.copy_sharp),
-      // backgroundColor: Colors.green,
-      // ),
-      drawer: const Drawer(
-        child: SybolPage(),
-      ),
+      drawer: const Drawer(child: SybolPage()),
+      onDrawerChanged: (isOpen) {
+        // write your callback implementation here
+        // print('drawer callback isOpen=$isOpen');
+        if (!isOpen) {
+          _isSymbolAllFalse = true;
+          symbolMap.forEach((key, value) {
+            if (symbolMap[key]) {
+              _isSymbolAllFalse = false;
+            }
+          });
+          if (_isSymbolAllFalse) {
+            setState(() {
+              isSymbol = false;
+            });
+          }
+        }
+      },
+      bottomNavigationBar: const AdBanner(size: AdSize.banner),
     );
   }
 }
