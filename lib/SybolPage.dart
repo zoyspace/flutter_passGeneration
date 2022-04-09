@@ -1,9 +1,6 @@
 // ignore_for_file: file_names, avoid_function_literals_in_foreach_calls
 
 import 'package:flutter/material.dart';
-import 'main.dart';
-
-var isSymbol = false;
 
 Map symbolMap = <String, bool>{
   '-': true, //ハイフン
