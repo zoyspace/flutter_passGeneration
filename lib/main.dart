@@ -1,5 +1,6 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'ad_banner.dart';
+import 'NewfloatingButton.dart';
 
 import 'dart:math'; //random
 import 'package:flutter/services.dart'; // copy to clipboad
@@ -378,6 +379,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 //     },
                 //   ),
                 // ),
+                NewFloatingButton(
+                  onTap: buttonPressed,
+                  isButtonPressed: isButtonPressed,
+                ),
               ],
             ),
           ],
@@ -403,5 +408,16 @@ class _MyHomePageState extends State<MyHomePage> {
       },
       bottomNavigationBar: const AdBanner(size: AdSize.banner),
     );
+  }
+
+  bool isButtonPressed = false;
+  void buttonPressed() {
+    setState(() {
+      if (isButtonPressed == false) {
+        isButtonPressed = true;
+      } else if (isButtonPressed == true) {
+        isButtonPressed = false;
+      }
+    });
   }
 }
