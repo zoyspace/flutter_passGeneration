@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
 
-class NewFloatingButton extends StatelessWidget {
+class FloatingButton_generate extends StatelessWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final onTap;
   bool isButtonPressed;
 
-  NewFloatingButton({Key? key, this.onTap, required this.isButtonPressed})
-      : super(key: key);
+  FloatingButton_generate({
+    Key? key,
+    this.onTap,
+    required this.isButtonPressed,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: onTap,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 900),
+          duration: const Duration(milliseconds: 100),
           height: 30,
           width: 160,
-          child: Icon(Icons.favorite,
-              size: 30,
-              color: isButtonPressed ? Colors.red[100] : Colors.red[500]),
+          child: Row(children: [
+            Icon(Icons.favorite,
+                size: 30,
+                color: isButtonPressed ? Colors.red[100] : Colors.red[500]),
+            Text('generate'),
+          ]),
           decoration: BoxDecoration(
               color: Colors.grey[300],
               borderRadius: BorderRadius.circular(12),

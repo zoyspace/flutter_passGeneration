@@ -1,3 +1,5 @@
+// ignore_for_file: must_call_super
+
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'ad_banner.dart';
 import 'NewfloatingButton.dart';
@@ -54,11 +56,23 @@ class _MyHomePageState extends State<MyHomePage> {
   String _charset = '';
   String _errortext = '';
   bool _isSymbolAllFalse = false;
+  bool _isButtonPressed = false;
+
+  String symbolSet1 = '';
+  String symbolSet2 = '';
+  int workSymbolCount = 0;
 
   @override
   void initState() {
     //アプリ起動時に一度だけ実行される
     _generatePassword();
+    createSymbolSet();
+  }
+
+  void buttonPressed() {
+    setState(() {
+      _isButtonPressed = !_isButtonPressed;
+    });
   }
 
 // 1. ここでTextEditingControllerを持たせる
@@ -115,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               partExample,
-              style: const TextStyle(color: Colors.black),
+              style: const TextStyle(fontSize: 20, color: Colors.black),
             ),
           ]),
         ],
@@ -125,13 +139,6 @@ class _MyHomePageState extends State<MyHomePage> {
     const smallLetterSet = 'abcdefghijklmnopqrstuvwxyz';
     const bigLetterSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const integerSet = '0123456789';
-
-    String symbolSet = '';
-    for (String key in symbolMap.keys) {
-      if (symbolMap[key]) {
-        symbolSet = symbolSet + key;
-      }
-    }
 
     _charset = '';
     if (_isSmall) {
@@ -144,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _charset = _charset + integerSet;
     }
     if (_isSymbol) {
-      _charset = _charset + symbolSet;
+      _charset = _charset + symbolSet1 + symbolSet2;
     }
     if (_isSmall == false &&
         _isBig == false &&
@@ -172,6 +179,32 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _createdRandomPassword = randomStr;
     });
+  }
+
+  void createSymbolSet() {
+    symbolSet1 = '';
+    symbolSet2 = '';
+    workSymbolCount = 0;
+    _isSymbolAllFalse = false;
+
+    for (String key in symbolMap.keys) {
+      if (symbolMap[key]) {
+        workSymbolCount++;
+        if (workSymbolCount < 9) {
+          symbolSet1 = symbolSet1 + key;
+        } else {
+          symbolSet2 = symbolSet2 + key;
+        }
+      }
+    }
+    if (workSymbolCount == 0) {
+      _isSymbolAllFalse = true;
+      setState(() {
+        _isSymbol = false;
+      });
+    }
+
+    setState(() {});
   }
 
   void copyToClipboad() {
@@ -329,10 +362,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                   symbolMap.forEach((key, value) {
                                     symbolMap[key] = true;
                                   });
+                                  createSymbolSet();
                                 }
                               }),
                           child: BuildPartCheckbox(
-                              _isSymbol, '#?!...', ' Symbols'))),
+                            _isSymbol,
+                            _isSymbolAllFalse ? 'No' : symbolSet1,
+                            _isSymbolAllFalse ? 'Symbols' : symbolSet2,
+                          ))),
                   Expanded(flex: 1, child: Container()),
                 ]),
                 const SizedBox(height: 50),
@@ -340,10 +377,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                   width: deviceWidth,
                   child: FloatingActionButton.extended(
+                    // onPressed: _generatePassword,
                     onPressed: _generatePassword,
                     heroTag: 'hero1',
                     tooltip: 'generator',
-                    label: const Text('生成　generate'),
+                    label: const Text('Recreate'),
                     icon: Transform.scale(
                         scale: 2, child: const Icon(Icons.play_for_work)),
                     backgroundColor: Colors.greenAccent,
@@ -379,9 +417,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 //     },
                 //   ),
                 // ),
-                NewFloatingButton(
+                FloatingButton_generate(
                   onTap: buttonPressed,
-                  isButtonPressed: isButtonPressed,
+                  isButtonPressed: _isButtonPressed,
                 ),
               ],
             ),
@@ -389,35 +427,13 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       drawer: const Drawer(child: SybolPage()),
+      endDrawer: const Drawer(child: SybolPage()),
       onDrawerChanged: (isOpen) {
-        // write your callback implementation here
-        // print('drawer callback isOpen=$isOpen');
         if (!isOpen) {
-          _isSymbolAllFalse = true;
-          symbolMap.forEach((key, value) {
-            if (symbolMap[key]) {
-              _isSymbolAllFalse = false;
-            }
-          });
-          if (_isSymbolAllFalse) {
-            setState(() {
-              _isSymbol = false;
-            });
-          }
+          createSymbolSet();
         }
       },
       bottomNavigationBar: const AdBanner(size: AdSize.banner),
     );
-  }
-
-  bool isButtonPressed = false;
-  void buttonPressed() {
-    setState(() {
-      if (isButtonPressed == false) {
-        isButtonPressed = true;
-      } else if (isButtonPressed == true) {
-        isButtonPressed = false;
-      }
-    });
   }
 }
