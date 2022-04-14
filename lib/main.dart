@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     //アプリ起動時に一度だけ実行される
     _generatePassword();
-    createSymbolSet();
+    _createSymbolSet();
   }
 
   void buttonPressed() {
@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget BuildPartCheckbox(bool ischeck, String partPass, String partExample) =>
+  Row BuildPartCheckbox(bool ischeck, String partPass, String partExample) =>
       Row(
         children: [
           Transform.scale(
@@ -182,7 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void createSymbolSet() {
+  void _createSymbolSet() {
     _symbolSet1 = '';
     _symbolSet2 = '';
     _workSymbolCount = 0;
@@ -300,78 +300,83 @@ class _MyHomePageState extends State<MyHomePage> {
                   Expanded(flex: 1, child: Container()),
                   Expanded(
                       flex: 10,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: (_isSmall)
-                                ? Colors.green
-                                : Colors.green.shade50,
-                            side: const BorderSide(color: Colors.green),
-                          ),
-                          onPressed: () => setState(() {
-                                _isSmall = !_isSmall;
-                              }),
-                          child: BuildPartCheckbox(
-                              _isSmall, 'abc...z', ' Lower'))),
+                      child: NewfloatingButton(
+                        onTap: () => setState(() {
+                          _isSmall = !_isSmall;
+                        }),
+                        isButtonPressed: _isSmall,
+                        partExample: 'abc...z',
+                        partPass: 'Lower',
+                      )),
+                  // _isSmall, 'abc...z', ' Lower'))),
                   Expanded(flex: 1, child: Container()),
                   Expanded(
                       flex: 10,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary:
-                                (_isBig) ? Colors.green : Colors.green.shade50,
-                            side: const BorderSide(color: Colors.green),
-                          ),
-                          onPressed: () => setState(() {
-                                _isBig = !_isBig;
-                              }),
-                          child:
-                              BuildPartCheckbox(_isBig, 'ABC...Z', ' Upper'))),
+                      child: NewfloatingButton(
+                        onTap: () => setState(() {
+                          _isBig = !_isBig;
+                        }),
+                        isButtonPressed: _isBig,
+                        partExample: 'ABC...Z',
+                        partPass: 'Upper',
+                      )),
                   Expanded(flex: 1, child: Container()),
                 ]),
                 Container(
-                  height: 10,
+                  height: 20,
                 ),
                 Row(children: [
                   Expanded(flex: 1, child: Container()),
                   Expanded(
                       flex: 10,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: (_isInteger)
-                                ? Colors.green
-                                : Colors.green.shade50,
-                            side: const BorderSide(color: Colors.green),
-                          ),
-                          onPressed: () => setState(() {
-                                _isInteger = !_isInteger;
-                              }),
-                          child: BuildPartCheckbox(
-                              _isInteger, '012...9', ' Numbers'))),
+                      child: NewfloatingButton(
+                        onTap: () => setState(() {
+                          _isInteger = !_isInteger;
+                        }),
+                        isButtonPressed: _isInteger,
+                        partExample: '012...9',
+                        partPass: 'Numbers',
+                      )),
+                  // _isInteger, '012...9', ' Numbers'))),
                   Expanded(flex: 1, child: Container()),
                   Expanded(
                       flex: 10,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: (_isSymbol)
-                                ? Colors.green
-                                : Colors.green.shade50,
-                            side: const BorderSide(color: Colors.green),
-                          ),
-                          onPressed: () => setState(() {
-                                _isSymbol = !_isSymbol;
-                                if (_isSymbolAllFalse == true &&
-                                    _isSymbol == true) {
-                                  symbolMap.forEach((key, value) {
-                                    symbolMap[key] = true;
-                                  });
-                                  createSymbolSet();
-                                }
-                              }),
-                          child: BuildPartCheckbox(
-                            _isSymbol,
-                            _isSymbolAllFalse ? 'No' : _symbolSet1,
-                            _isSymbolAllFalse ? 'Symbols' : _symbolSet2,
-                          ))),
+                      child: NewfloatingButton(
+                        onTap: () => setState(() {
+                          _isSymbol = !_isSymbol;
+                          if (_isSymbolAllFalse == true && _isSymbol == true) {
+                            symbolMap.forEach((key, value) {
+                              symbolMap[key] = true;
+                            });
+                            _createSymbolSet();
+                          }
+                        }),
+                        isButtonPressed: _isSymbol,
+                        partExample: (_isSymbolAllFalse) ? 'No' : _symbolSet1,
+                        partPass: (_isSymbolAllFalse) ? 'Symbols' : _symbolSet2,
+                      )),
+                  // child: ElevatedButton(
+                  //     style: ElevatedButton.styleFrom(
+                  //       primary: (_isSymbol)
+                  //           ? Colors.green
+                  //           : Colors.green.shade50,
+                  //       side: const BorderSide(color: Colors.green),
+                  //     ),
+                  //     onPressed: () => setState(() {
+                  //           _isSymbol = !_isSymbol;
+                  //           if (_isSymbolAllFalse == true &&
+                  //               _isSymbol == true) {
+                  //             symbolMap.forEach((key, value) {
+                  //               symbolMap[key] = true;
+                  //             });
+                  //             _createSymbolSet();
+                  //           }
+                  //         }),
+                  //     child: BuildPartCheckbox(
+                  //       _isSymbol,
+                  //       _isSymbolAllFalse ? 'No' : _symbolSet1,
+                  //       _isSymbolAllFalse ? 'Symbols' : _symbolSet2,
+                  //     ))),
                   Expanded(flex: 1, child: Container()),
                 ]),
                 const SizedBox(height: 50),
@@ -403,10 +408,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     // backgroundColor: Colors.greenAccent,
                   ),
                 ),
-                FloatingButton_generate(
-                  onTap: buttonPressed,
-                  isButtonPressed: _isButtonPressed,
-                ),
               ],
             ),
           ],
@@ -415,7 +416,7 @@ class _MyHomePageState extends State<MyHomePage> {
       drawer: const Drawer(child: SybolPage()),
       onDrawerChanged: (isOpen) {
         if (!isOpen) {
-          createSymbolSet();
+          _createSymbolSet();
         }
       },
       bottomNavigationBar: const AdBanner(size: AdSize.banner),
