@@ -2,17 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>GADApplicationIdentifier</key>
-    <string>ca-app-pub-6147471144580591~3263425144</string>
-	<key>SKAdNetworkItems</key>
-    <array>
-    	<dict>
-      		<key>SKAdNetworkIdentifier</key>
-      		<string>cstr6suwn9.skadnetwork</string>
-     	</dict>
-    </array>
-	<key>NSUserTrackingUsageDescription</key>
-    <string>「許可」すると、あなたに合った広告が表示されやすくなります。これによる個人情報へのアクセスはありません。また、許可しなくても、アプリの全ての機能をご利用いただけます。</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -33,8 +22,19 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-6147471144580591~3263425144</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>「許可」すると、あなたに合った広告が表示されやすくなります。これによる個人情報へのアクセスはありません。また、許可しなくても、アプリの全ての機能をご利用いただけます。</string>
+	<key>SKAdNetworkItems</key>
+	<array>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>cstr6suwn9.skadnetwork</string>
+		</dict>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

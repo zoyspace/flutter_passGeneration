@@ -46,6 +46,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String _createdRandomPassword = 'password';
   double _currentSliderValue = 32;
+  final int _maxSize = 32;
   int _length = 32;
   double _passFontsize = 30;
   bool _isSmall = true;
@@ -58,9 +59,9 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _isSymbolAllFalse = false;
   bool _isButtonPressed = false;
 
-  String symbolSet1 = '';
-  String symbolSet2 = '';
-  int workSymbolCount = 0;
+  String _symbolSet1 = '';
+  String _symbolSet2 = '';
+  int _workSymbolCount = 0;
 
   @override
   void initState() {
@@ -151,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _charset = _charset + integerSet;
     }
     if (_isSymbol) {
-      _charset = _charset + symbolSet1 + symbolSet2;
+      _charset = _charset + _symbolSet1 + _symbolSet2;
     }
     if (_isSmall == false &&
         _isBig == false &&
@@ -182,22 +183,22 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void createSymbolSet() {
-    symbolSet1 = '';
-    symbolSet2 = '';
-    workSymbolCount = 0;
+    _symbolSet1 = '';
+    _symbolSet2 = '';
+    _workSymbolCount = 0;
     _isSymbolAllFalse = false;
 
     for (String key in symbolMap.keys) {
       if (symbolMap[key]) {
-        workSymbolCount++;
-        if (workSymbolCount < 9) {
-          symbolSet1 = symbolSet1 + key;
+        _workSymbolCount++;
+        if (_workSymbolCount < 9) {
+          _symbolSet1 = _symbolSet1 + key;
         } else {
-          symbolSet2 = symbolSet2 + key;
+          _symbolSet2 = _symbolSet2 + key;
         }
       }
     }
-    if (workSymbolCount == 0) {
+    if (_workSymbolCount == 0) {
       _isSymbolAllFalse = true;
       setState(() {
         _isSymbol = false;
@@ -241,9 +242,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     flex: 7,
                     child: Slider(
                       value: _currentSliderValue,
-                      max: 64,
+                      max: _maxSize.toDouble(),
                       min: 1,
-                      divisions: 63,
+                      divisions: _maxSize - 1,
                       label: _currentSliderValue.round().toString(),
                       onChanged: (double value) {
                         setState(() {
@@ -275,7 +276,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onChanged: (text) {
                         if (int.tryParse(text) != null &&
                             int.parse(text) > 0 &&
-                            int.parse(text) < 65) {
+                            int.parse(text) < _maxSize + 1) {
                           // print('First text field: $text');
                           setState(() {
                             _length = int.parse(text);
@@ -285,13 +286,14 @@ class _MyHomePageState extends State<MyHomePage> {
                           });
                         } else {
                           setState(() {
-                            _errortext = '1 to 64';
+                            _errortext = '1 to $_maxSize';
                             myController.clear();
                           });
                         }
                       },
                     ),
-                  )
+                  ),
+                  const SizedBox(width: 10),
                 ]),
                 const SizedBox(height: 10),
                 Row(children: [
@@ -367,8 +369,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               }),
                           child: BuildPartCheckbox(
                             _isSymbol,
-                            _isSymbolAllFalse ? 'No' : symbolSet1,
-                            _isSymbolAllFalse ? 'Symbols' : symbolSet2,
+                            _isSymbolAllFalse ? 'No' : _symbolSet1,
+                            _isSymbolAllFalse ? 'Symbols' : _symbolSet2,
                           ))),
                   Expanded(flex: 1, child: Container()),
                 ]),
@@ -401,22 +403,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     // backgroundColor: Colors.greenAccent,
                   ),
                 ),
-                // Container(
-                //   margin: const EdgeInsets.fromLTRB(10, 0, 10, 60),
-                //   width: deviceWidth / 2,
-                //   child: FloatingActionButton.extended(
-                //     tooltip: 'nextpage',
-                //     heroTag: 'hero3',
-                //     label: const Text('寄付'),
-                //     onPressed: () {
-                //       Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //             builder: (context) => const NextPage()),
-                //       );
-                //     },
-                //   ),
-                // ),
                 FloatingButton_generate(
                   onTap: buttonPressed,
                   isButtonPressed: _isButtonPressed,
@@ -427,7 +413,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       drawer: const Drawer(child: SybolPage()),
-      endDrawer: const Drawer(child: SybolPage()),
       onDrawerChanged: (isOpen) {
         if (!isOpen) {
           createSymbolSet();

@@ -22,7 +22,7 @@ class FloatingButton_generate extends StatelessWidget {
             Icon(Icons.favorite,
                 size: 30,
                 color: isButtonPressed ? Colors.red[100] : Colors.red[500]),
-            Text('generate'),
+            const Text('generate'),
           ]),
           decoration: BoxDecoration(
               color: Colors.grey[300],
