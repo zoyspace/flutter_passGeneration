@@ -2,14 +2,13 @@
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'ad_banner.dart';
-import 'NewfloatingButton.dart';
 
 import 'dart:math'; //random
 import 'package:flutter/services.dart'; // copy to clipboad
 import 'dart:async';
 import 'package:flutter/material.dart';
-
-// import 'NextPage.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'NewfloatingButton.dart';
 import 'SybolPage.dart';
 
 void main() {
@@ -57,7 +56,6 @@ class _MyHomePageState extends State<MyHomePage> {
   String _charset = '';
   String _errortext = '';
   bool _isSymbolAllFalse = false;
-  bool _isButtonPressed = false;
 
   String _symbolSet1 = '';
   String _symbolSet2 = '';
@@ -68,12 +66,6 @@ class _MyHomePageState extends State<MyHomePage> {
     //アプリ起動時に一度だけ実行される
     _generatePassword();
     _createSymbolSet();
-  }
-
-  void buttonPressed() {
-    setState(() {
-      _isButtonPressed = !_isButtonPressed;
-    });
   }
 
 // 1. ここでTextEditingControllerを持たせる
@@ -89,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Container BuildPassArea() {
     return Container(
       alignment: Alignment.centerLeft,
-      margin: const EdgeInsets.fromLTRB(10, 10, 10, 30),
+      margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       padding: const EdgeInsets.all(10),
       width: double.infinity,
       height: 150,
@@ -104,37 +96,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-
-  Row BuildPartCheckbox(bool ischeck, String partPass, String partExample) =>
-      Row(
-        children: [
-          Transform.scale(
-              scale: 1.5,
-              child: (ischeck)
-                  ? const Icon(
-                      Icons.task_alt_outlined,
-                      color: Colors.black,
-                    )
-                  : const Icon(Icons.radio_button_unchecked_outlined,
-                      color: Colors.black)),
-          Container(
-            width: 10,
-          ),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
-              partPass,
-              style: const TextStyle(fontSize: 20, color: Colors.black),
-            ),
-            Container(
-              height: 5,
-            ),
-            Text(
-              partExample,
-              style: const TextStyle(fontSize: 20, color: Colors.black),
-            ),
-          ]),
-        ],
-      );
 
   Future<void> _generatePassword() async {
     const smallLetterSet = 'abcdefghijklmnopqrstuvwxyz';
@@ -355,31 +316,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         partExample: (_isSymbolAllFalse) ? 'No' : _symbolSet1,
                         partPass: (_isSymbolAllFalse) ? 'Symbols' : _symbolSet2,
                       )),
-                  // child: ElevatedButton(
-                  //     style: ElevatedButton.styleFrom(
-                  //       primary: (_isSymbol)
-                  //           ? Colors.green
-                  //           : Colors.green.shade50,
-                  //       side: const BorderSide(color: Colors.green),
-                  //     ),
-                  //     onPressed: () => setState(() {
-                  //           _isSymbol = !_isSymbol;
-                  //           if (_isSymbolAllFalse == true &&
-                  //               _isSymbol == true) {
-                  //             symbolMap.forEach((key, value) {
-                  //               symbolMap[key] = true;
-                  //             });
-                  //             _createSymbolSet();
-                  //           }
-                  //         }),
-                  //     child: BuildPartCheckbox(
-                  //       _isSymbol,
-                  //       _isSymbolAllFalse ? 'No' : _symbolSet1,
-                  //       _isSymbolAllFalse ? 'Symbols' : _symbolSet2,
-                  //     ))),
+
                   Expanded(flex: 1, child: Container()),
                 ]),
-                const SizedBox(height: 50),
+                const SizedBox(height: 30),
                 Container(
                   margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                   width: deviceWidth,
@@ -391,7 +331,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     label: const Text('Recreate'),
                     icon: Transform.scale(
                         scale: 2, child: const Icon(Icons.play_for_work)),
-                    backgroundColor: Colors.greenAccent,
+                    backgroundColor: Colors.green,
                   ),
                 ),
                 const SizedBox(height: 10),
