@@ -21,14 +21,14 @@ Map symbolMap = <String, bool>{
   '|': true,
 };
 
-class SybolPage extends StatefulWidget {
-  const SybolPage({Key? key}) : super(key: key);
+class SymbolPage extends StatefulWidget {
+  const SymbolPage({Key? key}) : super(key: key);
 
   @override
-  State<SybolPage> createState() => _SybolPage();
+  State<SymbolPage> createState() => _SymbolPage();
 }
 
-class _SybolPage extends State<SybolPage> {
+class _SymbolPage extends State<SymbolPage> {
   @override
   Widget build(BuildContext context) {
     // print(symbolMap);
@@ -108,11 +108,11 @@ class _SybolPage extends State<SybolPage> {
                         ),
                       ],
                     ))),
-          TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Close')),
+          // TextButton(
+          //     onPressed: () {
+          //       Navigator.pop(context);
+          //     },
+          //     child: const Text('Close')),
         ],
       ),
     );
