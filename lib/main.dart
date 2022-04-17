@@ -34,8 +34,6 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidget extends State<MyStatefulWidget> {
-  @override
-  final Color navigationBarColor = Colors.white;
   int selectedIndex = 1;
   late PageController pageController;
   @override
@@ -46,14 +44,15 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Select symbol'),
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Select symbol'),
+      // ),
       body: PageView(
         /// [PageView.scrollDirection] defaults to [Axis.horizontal].
         /// Use [Axis.vertical] to scroll vertically.
         controller: pageController,
         physics: const NeverScrollableScrollPhysics(),
+        // onPageChanged:debugprint(symbolMap),
 
         children: <Widget>[
           SymbolPage(),
@@ -64,7 +63,8 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
       bottomNavigationBar: ClipRRect(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         child: WaterDropNavBar(
-          backgroundColor: navigationBarColor,
+          backgroundColor: Colors.white,
+          waterDropColor: Colors.green,
           onItemSelected: (int index) {
             setState(() {
               selectedIndex = index;
@@ -76,15 +76,15 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
           selectedIndex: selectedIndex,
           barItems: <BarItem>[
             BarItem(
-              filledIcon: Icons.bookmark_rounded,
-              outlinedIcon: Icons.bookmark_border_rounded,
+              filledIcon: Icons.settings_rounded,
+              outlinedIcon: Icons.settings_outlined,
             ),
             BarItem(
-                filledIcon: Icons.favorite_rounded,
-                outlinedIcon: Icons.favorite_border_rounded),
+                filledIcon: Icons.home_rounded,
+                outlinedIcon: Icons.home_outlined),
             BarItem(
-              filledIcon: Icons.email_rounded,
-              outlinedIcon: Icons.email_outlined,
+              filledIcon: Icons.account_circle_rounded,
+              outlinedIcon: Icons.account_circle_outlined,
             ),
           ],
         ),

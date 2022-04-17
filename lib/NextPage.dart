@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
+import 'ad_banner.dart';
 
 class NextPage extends StatelessWidget {
   const NextPage({Key? key}) : super(key: key);
@@ -6,10 +9,13 @@ class NextPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
-        title: const Text('NextPage'),
+        title: const Text('Please Click'),
       ),
-      body: Container(color: Colors.purple, child: const Text('hello')),
+      body: Center(
+        child: const AdBanner(size: AdSize.banner),
+      ),
     );
   }
 }

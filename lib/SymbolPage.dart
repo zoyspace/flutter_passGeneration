@@ -34,6 +34,7 @@ class _SymbolPage extends State<SymbolPage> {
     // print(symbolMap);
 
     return Scaffold(
+      backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
         title: const Text('Select symbol'),
       ),

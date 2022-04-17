@@ -1,8 +1,5 @@
 // ignore_for_file: must_call_super
 
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'ad_banner.dart';
-
 import 'dart:math'; //random
 import 'package:flutter/services.dart'; // copy to clipboad
 import 'dart:async';
@@ -159,7 +156,7 @@ class _GneratorPage extends State<GneratorPage> {
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
-        title: Text('GneratorPage'),
+        title: const Text('GneratorPage'),
       ),
       body: RefreshIndicator(
         // strokeWidth: 10,
@@ -338,7 +335,6 @@ class _GneratorPage extends State<GneratorPage> {
           _createSymbolSet();
         }
       },
-      bottomNavigationBar: const AdBanner(size: AdSize.banner),
     );
   }
 }
