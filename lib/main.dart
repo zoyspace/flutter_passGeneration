@@ -7,7 +7,6 @@ import 'dart:math'; //random
 import 'package:flutter/services.dart'; // copy to clipboad
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'NewfloatingButton.dart';
 import 'SybolPage.dart';
 
