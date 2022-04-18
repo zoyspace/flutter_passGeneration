@@ -37,6 +37,7 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
   int selectedIndex = 1;
   late PageController pageController;
   @override
+  // ignore: must_call_super
   void initState() {
     pageController = PageController(initialPage: selectedIndex);
   }
@@ -50,18 +51,19 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
       body: PageView(
         /// [PageView.scrollDirection] defaults to [Axis.horizontal].
         /// Use [Axis.vertical] to scroll vertically.
+        // scrollDirection: Axis.horizontal,
         controller: pageController,
         physics: const NeverScrollableScrollPhysics(),
         // onPageChanged:debugprint(symbolMap),
 
-        children: <Widget>[
+        children: const <Widget>[
           SymbolPage(),
           GneratorPage(),
           NextPage(),
         ],
       ),
       bottomNavigationBar: ClipRRect(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         child: WaterDropNavBar(
           backgroundColor: Colors.white,
           waterDropColor: Colors.green,

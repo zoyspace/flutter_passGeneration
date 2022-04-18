@@ -49,11 +49,10 @@ class _GneratorPage extends State<GneratorPage> {
 // 2. 必ずdispose()をoverrideして、作ったTextEditingControllerを廃棄する。
   @override
   void dispose() {
-    myController.dispose();
     super.dispose();
+    myController.dispose();
   }
 
-  // bool isCheckedsmall = false;
   Container BuildPassArea() {
     return Container(
       alignment: Alignment.centerLeft,
@@ -155,9 +154,9 @@ class _GneratorPage extends State<GneratorPage> {
 
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
-      appBar: AppBar(
-        title: const Text('GneratorPage'),
-      ),
+      // appBar: AppBar(
+      //   title: const Text('GneratorPage'),
+      // ),
       body: RefreshIndicator(
         // strokeWidth: 10,
         // displacement: 0.1,
@@ -168,6 +167,9 @@ class _GneratorPage extends State<GneratorPage> {
         },
         child: ListView(
           children: [
+            const SizedBox(
+              height: 10,
+            ),
             Column(
               // child: Column(
               // mainAxisAlignment: MainAxisAlignment.center,
