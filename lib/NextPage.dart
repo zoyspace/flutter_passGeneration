@@ -9,13 +9,22 @@ class NextPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
-      appBar: AppBar(
-        title: const Text('Please Click'),
-      ),
-      body: Center(
-        child: const AdBanner(size: AdSize.banner),
-      ),
-    );
+        backgroundColor: Colors.grey.shade300,
+        appBar: AppBar(
+          title: const Text('Please Click'),
+        ),
+        body: Center(
+          child: Column(mainAxisSize: MainAxisSize.min, children: const [
+            AdBanner(size: AdSize.banner),
+            SizedBox(
+              height: 30,
+            ),
+            AdBanner(size: AdSize.banner),
+            SizedBox(
+              height: 30,
+            ),
+            AdBanner(size: AdSize.banner),
+          ]),
+        ));
   }
 }

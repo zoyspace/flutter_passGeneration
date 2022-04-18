@@ -21,7 +21,7 @@ class GneratorPage extends StatefulWidget {
 class _GneratorPage extends State<GneratorPage> {
   String _createdRandomPassword = 'password';
   double _currentSliderValue = 32;
-  final int _maxSize = 32;
+  final int _maxSize = 50;
   int _length = 32;
   double _passFontsize = 30;
   bool _isSmall = true;
@@ -306,9 +306,9 @@ class _GneratorPage extends State<GneratorPage> {
                     onPressed: _generatePassword,
                     heroTag: 'hero1',
                     tooltip: 'generator',
-                    label: const Text('Recreate'),
+                    label: const Text('Create'),
                     icon: Transform.scale(
-                        scale: 2, child: const Icon(Icons.play_for_work)),
+                        scale: 2, child: const Icon(Icons.replay_outlined)),
                     backgroundColor: Colors.green,
                   ),
                 ),
