@@ -36,7 +36,7 @@ class _SymbolPage extends State<SymbolPage> {
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
-        title: const Text('Select Symbol'),
+        title: const Text('Select Symbols'),
       ),
       body: GridView.count(
         primary: false,
