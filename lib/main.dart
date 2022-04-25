@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
-
-import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'GeneratorPage.dart';
 import 'SymbolPage.dart';
 import 'NextPage.dart';
 
-void main() => runApp(const MyApp());
+final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
+String aaa = 'aa';
+void main() {
+  runApp(
+    const MyApp(),
+  );
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -18,7 +23,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: _title,
       theme: ThemeData(primarySwatch: Colors.green),
-      home: Scaffold(
+      navigatorObservers: [routeObserver],
+      home: const Scaffold(
         // appBar: AppBar(title: const Text(_title)),
         body: MyStatefulWidget(),
       ),
@@ -27,69 +33,90 @@ class MyApp extends StatelessWidget {
 }
 
 class MyStatefulWidget extends StatefulWidget {
-  MyStatefulWidget({Key? key}) : super(key: key);
+  const MyStatefulWidget({Key? key}) : super(key: key);
 
   @override
-  State<MyStatefulWidget> createState() => _MyStatefulWidget();
+  State<MyStatefulWidget> createState() {
+    return _MyStatefulWidget();
+  }
 }
 
 class _MyStatefulWidget extends State<MyStatefulWidget> {
-  int selectedIndex = 1;
-  late PageController pageController;
+  GlobalKey globalKey_GeneratorPageState = GlobalKey<GeneratorPageState>();
+  List<Widget> pageList = <Widget>[];
+  int _selectedIndex = 1;
+  final PageController _pageController =
+      PageController(initialPage: 1, keepPage: true);
+  void _onTappedBar(int index) {
+    setState(() {
+      _selectedIndex = index;
+      aaa = 'add';
+      debugPrint(aaa);
+    });
+    // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+    //   return pageList[_selectedIndex];
+    // }));
+  }
+  // void _onTappedBar(int value) { // pageview
+  //   setState(() {
+  //     _selectedIndex = value;
+  //   });
+  //   _pageController.jumpToPage(value);
+  // }
+
   @override
-  // ignore: must_call_super
   void initState() {
-    pageController = PageController(initialPage: selectedIndex);
+    pageList.add(const SymbolPage());
+    pageList.add(GeneratorPage(
+      key: globalKey_GeneratorPageState,
+    ));
+    pageList.add(const NextPage());
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Select symbol'),
-      // ),
-      body: PageView(
-        /// [PageView.scrollDirection] defaults to [Axis.horizontal].
-        /// Use [Axis.vertical] to scroll vertically.
-        // scrollDirection: Axis.horizontal,
-        controller: pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        // onPageChanged:debugprint(symbolMap),
-
-        children: const <Widget>[
-          SymbolPage(),
-          GneratorPage(),
-          NextPage(),
-        ],
+      body:
+          // appBar: AppBar(
+          //   title: const Text('Select symbol'),
+          // ),
+          // body: PageView(
+          // pageList[_selectedIndex],
+          // controller: _pageController,
+          IndexedStack(
+        index: _selectedIndex,
+        children: pageList,
       ),
-      bottomNavigationBar: ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        child: WaterDropNavBar(
-          backgroundColor: Colors.white,
-          waterDropColor: Colors.green,
-          onItemSelected: (int index) {
-            setState(() {
-              selectedIndex = index;
-            });
-            pageController.animateToPage(selectedIndex,
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.easeOutQuad);
-          },
-          selectedIndex: selectedIndex,
-          barItems: <BarItem>[
-            BarItem(
-              filledIcon: Icons.settings_rounded,
-              outlinedIcon: Icons.settings_outlined,
-            ),
-            BarItem(
-                filledIcon: Icons.home_rounded,
-                outlinedIcon: Icons.home_outlined),
-            BarItem(
-              filledIcon: Icons.account_circle_rounded,
-              outlinedIcon: Icons.account_circle_outlined,
-            ),
-          ],
-        ),
+      // // onPageChanged: (index) {
+      //   setState(() => _selectedIndex = index);
+      //   // globalKey_GeneratorPageState.currentState?.createSymbolSet();
+      // },
+
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: _onTappedBar,
+        currentIndex: _selectedIndex,
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'SYMBOLS',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'HOME',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'advertisement',
+          ),
+        ],
       ),
     );
   }

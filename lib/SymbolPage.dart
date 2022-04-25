@@ -56,6 +56,7 @@ class _SymbolPage extends State<SymbolPage> {
               symbolMap.forEach((key, value) {
                 symbolMap[key] = true;
               });
+
               setState(() {});
             },
           ),

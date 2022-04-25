@@ -3,45 +3,92 @@
 import 'dart:math'; //random
 import 'package:flutter/services.dart'; // copy to clipboad
 import 'dart:async';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:flutter/material.dart';
 import 'NewfloatingButton.dart';
 import 'SymbolPage.dart';
+import 'main.dart';
 
-class GneratorPage extends StatefulWidget {
-  const GneratorPage({
+class GeneratorPage extends StatefulWidget {
+  const GeneratorPage({
     Key? key,
   }) : super(key: key);
 
   // final String title;
 
   @override
-  State<GneratorPage> createState() => _GneratorPage();
+  State<GeneratorPage> createState() {
+    return GeneratorPageState();
+  }
 }
 
-class _GneratorPage extends State<GneratorPage> {
-  String _createdRandomPassword = 'password';
-  double _currentSliderValue = 32;
+class GeneratorPageState extends State<GeneratorPage>
+// with RouteAware {
+    with
+        RouteAware,
+        AutomaticKeepAliveClientMixin {
+  @override
+  void didChangeDependencies() {
+    // 遷移時に呼ばれる関数
+    // routeObserverに自身を設定
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+    debugPrint("didChangeDependencies");
+  }
+
+  @override
+  void didPopNext() {
+    debugPrint("popされて、この画面に戻ってきました！");
+  }
+
+  @override
+  void didPush() {
+    debugPrint("pushされてきました、この画面にやってきました！");
+  }
+
+  @override
+  void didPop() {
+    debugPrint("この画面がpopされました");
+  }
+
+  @override
+  void didPushNext() {
+    debugPrint("この画面からpushして違う画面に遷移しました！");
+  }
+
+  // with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive =>
+      true; // To store state(AutomaticKeepAliveClientMixin) 追加！
+  String _createdRandomPassword = '3';
+
+  double _currentSliderValue = 20;
   final int _maxSize = 50;
-  int _length = 32;
+  int _length = 20;
   double _passFontsize = 30;
   bool _isSmall = true;
+
   bool _isBig = true;
   bool _isInteger = true;
   bool _isSymbol = false;
 
   String _charset = '';
   String _errortext = '';
-  bool _isSymbolAllFalse = false;
 
   String _symbolSet1 = '';
   String _symbolSet2 = '';
-  int _workSymbolCount = 0;
+  bool _isSymbolAllFalse = false;
 
   @override
   void initState() {
     //アプリ起動時に一度だけ実行される
+    super.initState();
+
     _generatePassword();
-    _createSymbolSet();
+    createSymbolSet();
+    debugPrint("initState");
+    // setState(() {});
   }
 
 // 1. ここでTextEditingControllerを持たせる
@@ -49,8 +96,32 @@ class _GneratorPage extends State<GneratorPage> {
 // 2. 必ずdispose()をoverrideして、作ったTextEditingControllerを廃棄する。
   @override
   void dispose() {
-    super.dispose();
     myController.dispose();
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  void createSymbolSet() {
+    _symbolSet1 = '';
+    _symbolSet2 = '';
+    _isSymbolAllFalse = false;
+    int _workSymbolCount = 0;
+
+    for (String key in symbolMap.keys) {
+      if (symbolMap[key]) {
+        _workSymbolCount++;
+        if (_workSymbolCount < 9) {
+          _symbolSet1 = _symbolSet1 + key;
+        } else {
+          _symbolSet2 = _symbolSet2 + key;
+        }
+      }
+    }
+    if (_workSymbolCount == 0) {
+      _isSymbolAllFalse = true;
+      _isSymbol = false;
+    }
+    setState(() {});
   }
 
   Container BuildPassArea() {
@@ -118,38 +189,14 @@ class _GneratorPage extends State<GneratorPage> {
     });
   }
 
-  void _createSymbolSet() {
-    _symbolSet1 = '';
-    _symbolSet2 = '';
-    _workSymbolCount = 0;
-    _isSymbolAllFalse = false;
-
-    for (String key in symbolMap.keys) {
-      if (symbolMap[key]) {
-        _workSymbolCount++;
-        if (_workSymbolCount < 9) {
-          _symbolSet1 = _symbolSet1 + key;
-        } else {
-          _symbolSet2 = _symbolSet2 + key;
-        }
-      }
-    }
-    if (_workSymbolCount == 0) {
-      _isSymbolAllFalse = true;
-      setState(() {
-        _isSymbol = false;
-      });
-    }
-
-    setState(() {});
-  }
-
   void copyToClipboad() {
     Clipboard.setData(ClipboardData(text: _createdRandomPassword));
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // 追加！
+
     final double deviceWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -287,8 +334,8 @@ class _GneratorPage extends State<GneratorPage> {
                             symbolMap.forEach((key, value) {
                               symbolMap[key] = true;
                             });
-                            _createSymbolSet();
                           }
+                          createSymbolSet();
                         }),
                         isButtonPressed: _isSymbol,
                         partExample: (_isSymbolAllFalse) ? 'No' : _symbolSet1,
@@ -331,12 +378,12 @@ class _GneratorPage extends State<GneratorPage> {
           ],
         ),
       ),
-      drawer: const Drawer(child: SymbolPage()),
-      onDrawerChanged: (isOpen) {
-        if (!isOpen) {
-          _createSymbolSet();
-        }
-      },
+      // drawer: const Drawer(child: SymbolPage()),
+      // onDrawerChanged: (isOpen) {
+      //   if (!isOpen) {
+      //     _createSymbolSet();
+      //   }
+      // },
     );
   }
 }
