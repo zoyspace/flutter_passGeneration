@@ -21,21 +21,22 @@ Map symbolMap = <String, bool>{
   '|': true,
 };
 
-class SybolPage extends StatefulWidget {
-  const SybolPage({Key? key}) : super(key: key);
+class SymbolPage extends StatefulWidget {
+  const SymbolPage({Key? key}) : super(key: key);
 
   @override
-  State<SybolPage> createState() => _SybolPage();
+  State<SymbolPage> createState() => _SymbolPage();
 }
 
-class _SybolPage extends State<SybolPage> {
+class _SymbolPage extends State<SymbolPage> {
   @override
   Widget build(BuildContext context) {
     // print(symbolMap);
 
     return Scaffold(
+      backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
-        title: const Text('Select symbol'),
+        title: const Text('Select Symbols'),
       ),
       body: GridView.count(
         primary: false,
@@ -55,6 +56,7 @@ class _SybolPage extends State<SybolPage> {
               symbolMap.forEach((key, value) {
                 symbolMap[key] = true;
               });
+
               setState(() {});
             },
           ),
@@ -108,11 +110,11 @@ class _SybolPage extends State<SybolPage> {
                         ),
                       ],
                     ))),
-          TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Close')),
+          // TextButton(
+          //     onPressed: () {
+          //       Navigator.pop(context);
+          //     },
+          //     child: const Text('Close')),
         ],
       ),
     );
