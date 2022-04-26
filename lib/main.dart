@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'GeneratorPage.dart';
 import 'SymbolPage.dart';
@@ -8,9 +7,7 @@ import 'NextPage.dart';
 final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
 String aaa = 'aa';
 void main() {
-  runApp(
-    const MyApp(),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -42,7 +39,6 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidget extends State<MyStatefulWidget> {
-  GlobalKey globalKey_GeneratorPageState = GlobalKey<GeneratorPageState>();
   List<Widget> pageList = <Widget>[];
   int _selectedIndex = 1;
   final PageController _pageController =
@@ -50,12 +46,9 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
   void _onTappedBar(int index) {
     setState(() {
       _selectedIndex = index;
-      aaa = 'add';
-      debugPrint(aaa);
     });
-    // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-    //   return pageList[_selectedIndex];
-    // }));
+    _pageController.animateToPage(index,
+        duration: const Duration(milliseconds: 10), curve: Curves.ease);
   }
   // void _onTappedBar(int value) { // pageview
   //   setState(() {
@@ -80,6 +73,7 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
     super.dispose();
   }
 
+  GlobalKey globalKey_GeneratorPageState = GlobalKey<GeneratorPageState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,15 +81,19 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
           // appBar: AppBar(
           //   title: const Text('Select symbol'),
           // ),
-          // body: PageView(
-          // pageList[_selectedIndex],
-          // controller: _pageController,
-          IndexedStack(
-        index: _selectedIndex,
-        children: pageList,
-      ),
-      // // onPageChanged: (index) {
-      //   setState(() => _selectedIndex = index);
+
+          PageView(
+              children: pageList,
+              controller: _pageController,
+              onPageChanged: (index) {
+                setState(() => _selectedIndex = index);
+              }),
+
+      //     IndexedStack(
+      //   index: _selectedIndex,
+      //   children: pageList,
+      // ),
+
       //   // globalKey_GeneratorPageState.currentState?.createSymbolSet();
       // },
 
@@ -113,8 +111,8 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
             label: 'HOME',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'advertisement',
+            icon: Icon(Icons.volunteer_activism),
+            label: 'DONATION',
           ),
         ],
       ),

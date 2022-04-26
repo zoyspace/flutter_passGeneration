@@ -3,7 +3,6 @@
 import 'dart:math'; //random
 import 'package:flutter/services.dart'; // copy to clipboad
 import 'dart:async';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter/material.dart';
 import 'NewfloatingButton.dart';
@@ -58,7 +57,6 @@ class GeneratorPageState extends State<GeneratorPage>
   }
 
   // with AutomaticKeepAliveClientMixin {
-  @override
   bool get wantKeepAlive =>
       true; // To store state(AutomaticKeepAliveClientMixin) 追加！
   String _createdRandomPassword = '3';
@@ -71,14 +69,14 @@ class GeneratorPageState extends State<GeneratorPage>
 
   bool _isBig = true;
   bool _isInteger = true;
-  bool _isSymbol = false;
+  bool isSymbol = false;
 
   String _charset = '';
   String _errortext = '';
 
-  String _symbolSet1 = '';
-  String _symbolSet2 = '';
-  bool _isSymbolAllFalse = false;
+  String symbolSet1 = '';
+  String symbolSet2 = '';
+  bool isSymbolAllFalse = false;
 
   @override
   void initState() {
@@ -102,24 +100,24 @@ class GeneratorPageState extends State<GeneratorPage>
   }
 
   void createSymbolSet() {
-    _symbolSet1 = '';
-    _symbolSet2 = '';
-    _isSymbolAllFalse = false;
-    int _workSymbolCount = 0;
+    symbolSet1 = '';
+    symbolSet2 = '';
+    isSymbolAllFalse = false;
+    int workSymbolCount = 0;
 
     for (String key in symbolMap.keys) {
       if (symbolMap[key]) {
-        _workSymbolCount++;
-        if (_workSymbolCount < 9) {
-          _symbolSet1 = _symbolSet1 + key;
+        workSymbolCount++;
+        if (workSymbolCount < 9) {
+          symbolSet1 = symbolSet1 + key;
         } else {
-          _symbolSet2 = _symbolSet2 + key;
+          symbolSet2 = symbolSet2 + key;
         }
       }
     }
-    if (_workSymbolCount == 0) {
-      _isSymbolAllFalse = true;
-      _isSymbol = false;
+    if (workSymbolCount == 0) {
+      isSymbolAllFalse = true;
+      isSymbol = false;
     }
     setState(() {});
   }
@@ -149,6 +147,7 @@ class GeneratorPageState extends State<GeneratorPage>
     const integerSet = '0123456789';
 
     _charset = '';
+    createSymbolSet();
     if (_isSmall) {
       _charset = _charset + smallLetterSet;
     }
@@ -158,13 +157,13 @@ class GeneratorPageState extends State<GeneratorPage>
     if (_isInteger) {
       _charset = _charset + integerSet;
     }
-    if (_isSymbol) {
-      _charset = _charset + _symbolSet1 + _symbolSet2;
+    if (isSymbol) {
+      _charset = _charset + symbolSet1 + symbolSet2;
     }
     if (_isSmall == false &&
         _isBig == false &&
         _isInteger == false &&
-        _isSymbol == false) {
+        isSymbol == false) {
       _charset = '*';
     }
 
@@ -329,17 +328,17 @@ class GeneratorPageState extends State<GeneratorPage>
                       flex: 10,
                       child: NewfloatingButton(
                         onTap: () => setState(() {
-                          _isSymbol = !_isSymbol;
-                          if (_isSymbolAllFalse == true && _isSymbol == true) {
+                          isSymbol = !isSymbol;
+                          if (isSymbolAllFalse == true && isSymbol == true) {
                             symbolMap.forEach((key, value) {
                               symbolMap[key] = true;
                             });
                           }
                           createSymbolSet();
                         }),
-                        isButtonPressed: _isSymbol,
-                        partExample: (_isSymbolAllFalse) ? 'No' : _symbolSet1,
-                        partPass: (_isSymbolAllFalse) ? 'Symbols' : _symbolSet2,
+                        isButtonPressed: isSymbol,
+                        partExample: (isSymbolAllFalse) ? 'No' : symbolSet1,
+                        partPass: (isSymbolAllFalse) ? 'Symbols' : symbolSet2,
                       )),
 
                   Expanded(flex: 1, child: Container()),
