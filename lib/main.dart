@@ -4,10 +4,20 @@ import 'GeneratorPage.dart';
 import 'SymbolPage.dart';
 import 'NextPage.dart';
 
+import 'package:provider/provider.dart';
+
 final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
-String aaa = 'aa';
 void main() {
-  runApp(const MyApp());
+  runApp(
+    /// Providers are above [MyApp] instead of inside it, so that tests
+    /// can use [MyApp] while mocking the providers
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => SymbolsSetProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -41,8 +51,7 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidget extends State<MyStatefulWidget> {
   List<Widget> pageList = <Widget>[];
   int _selectedIndex = 1;
-  final PageController _pageController =
-      PageController(initialPage: 1, keepPage: true);
+  final PageController _pageController = PageController(initialPage: 1);
   void _onTappedBar(int index) {
     setState(() {
       _selectedIndex = index;
@@ -60,9 +69,10 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
   @override
   void initState() {
     pageList.add(const SymbolPage());
-    pageList.add(GeneratorPage(
-      key: globalKey_GeneratorPageState,
-    ));
+    pageList.add(GeneratorPage());
+    // pageList.add(GeneratorPage(
+    //   key: globalKey_GeneratorPageState,
+    // ));
     pageList.add(const NextPage());
     super.initState();
   }
@@ -73,7 +83,7 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
     super.dispose();
   }
 
-  GlobalKey globalKey_GeneratorPageState = GlobalKey<GeneratorPageState>();
+  // GlobalKey globalKey_GeneratorPageState = GlobalKey<GeneratorPageState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

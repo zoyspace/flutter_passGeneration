@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, avoid_function_literals_in_foreach_calls
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 Map symbolMap = <String, bool>{
   '-': true, //ハイフン
@@ -21,6 +22,17 @@ Map symbolMap = <String, bool>{
   '|': true,
 };
 
+class SymbolsSetProvider with ChangeNotifier {
+  bool _isNotifier = false;
+
+  bool get isNotifier => _isNotifier;
+
+  set isNotifier(bool value) {
+    _isNotifier = value;
+    notifyListeners();
+  }
+}
+
 class SymbolPage extends StatefulWidget {
   const SymbolPage({Key? key}) : super(key: key);
 
@@ -30,8 +42,12 @@ class SymbolPage extends StatefulWidget {
 
 class _SymbolPage extends State<SymbolPage> {
   @override
+  void initState() {
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
-    // print(symbolMap);
+    final symbolPrvider = Provider.of<SymbolsSetProvider>(context);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
@@ -49,29 +65,29 @@ class _SymbolPage extends State<SymbolPage> {
           ElevatedButton(
             child: const Text('Select All'),
             style: ElevatedButton.styleFrom(
-              primary: Colors.lightGreen,
+              primary: Colors.green,
               onPrimary: Colors.white,
             ),
             onPressed: () {
               symbolMap.forEach((key, value) {
                 symbolMap[key] = true;
               });
-
               setState(() {});
+              symbolPrvider.isNotifier = true;
             },
           ),
           ElevatedButton(
             child: const Text('Release All'),
             style: ElevatedButton.styleFrom(
-              primary: Colors.lightGreen,
+              primary: Colors.green,
               onPrimary: Colors.white,
             ),
             onPressed: () {
               symbolMap.forEach((key, value) {
                 symbolMap[key] = false;
               });
-
               setState(() {});
+              symbolPrvider.isNotifier = true;
             },
           ),
           for (final key in symbolMap.keys)
@@ -80,12 +96,15 @@ class _SymbolPage extends State<SymbolPage> {
                   setState(() {
                     symbolMap[key] = !symbolMap[key];
                   });
+                  symbolPrvider.isNotifier = true;
                 },
                 child: Container(
                     padding: const EdgeInsets.all(5.0),
                     decoration: BoxDecoration(
-                      color: (symbolMap[key]) ? Colors.green : Colors.white,
-                      border: Border.all(color: Colors.green),
+                      color: (symbolMap[key])
+                          ? Colors.green.shade200
+                          : Colors.white,
+                      // border: Border.all(color: Colors.green),
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Row(
@@ -110,11 +129,6 @@ class _SymbolPage extends State<SymbolPage> {
                         ),
                       ],
                     ))),
-          // TextButton(
-          //     onPressed: () {
-          //       Navigator.pop(context);
-          //     },
-          //     child: const Text('Close')),
         ],
       ),
     );

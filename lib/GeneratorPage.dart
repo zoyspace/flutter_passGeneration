@@ -3,7 +3,7 @@
 import 'dart:math'; //random
 import 'package:flutter/services.dart'; // copy to clipboad
 import 'dart:async';
-
+import 'package:provider/provider.dart'; //provider
 import 'package:flutter/material.dart';
 import 'NewfloatingButton.dart';
 import 'SymbolPage.dart';
@@ -23,10 +23,7 @@ class GeneratorPage extends StatefulWidget {
 }
 
 class GeneratorPageState extends State<GeneratorPage>
-// with RouteAware {
-    with
-        RouteAware,
-        AutomaticKeepAliveClientMixin {
+    with RouteAware, AutomaticKeepAliveClientMixin {
   @override
   void didChangeDependencies() {
     // 遷移時に呼ばれる関数
@@ -34,6 +31,11 @@ class GeneratorPageState extends State<GeneratorPage>
     super.didChangeDependencies();
     routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
     debugPrint("didChangeDependencies");
+
+    createSymbolSet();
+    if (context.watch<SymbolsSetProvider>().isNotifier) {
+      // setState(() {});
+    }
   }
 
   @override
@@ -74,17 +76,12 @@ class GeneratorPageState extends State<GeneratorPage>
   String _charset = '';
   String _errortext = '';
 
-  String symbolSet1 = '';
-  String symbolSet2 = '';
-  bool isSymbolAllFalse = false;
-
   @override
   void initState() {
     //アプリ起動時に一度だけ実行される
     super.initState();
-
     _generatePassword();
-    createSymbolSet();
+    // _generatePassword(context.read<SymbolsSetProvider>().symbolsSet);
     debugPrint("initState");
     // setState(() {});
   }
@@ -98,6 +95,10 @@ class GeneratorPageState extends State<GeneratorPage>
     routeObserver.unsubscribe(this);
     super.dispose();
   }
+
+  String symbolSet1 = '';
+  String symbolSet2 = '';
+  bool isSymbolAllFalse = false;
 
   void createSymbolSet() {
     symbolSet1 = '';
@@ -147,7 +148,6 @@ class GeneratorPageState extends State<GeneratorPage>
     const integerSet = '0123456789';
 
     _charset = '';
-    createSymbolSet();
     if (_isSmall) {
       _charset = _charset + smallLetterSet;
     }
@@ -333,8 +333,8 @@ class GeneratorPageState extends State<GeneratorPage>
                             symbolMap.forEach((key, value) {
                               symbolMap[key] = true;
                             });
+                            createSymbolSet();
                           }
-                          createSymbolSet();
                         }),
                         isButtonPressed: isSymbol,
                         partExample: (isSymbolAllFalse) ? 'No' : symbolSet1,
@@ -349,7 +349,8 @@ class GeneratorPageState extends State<GeneratorPage>
                   width: deviceWidth,
                   child: FloatingActionButton.extended(
                     // onPressed: _generatePassword,
-                    onPressed: _generatePassword,
+                    // onPressed: copyToClipboad,
+                    onPressed: () => {_generatePassword()},
                     heroTag: 'hero1',
                     tooltip: 'generator',
                     label: const Text('Create'),
@@ -377,12 +378,6 @@ class GeneratorPageState extends State<GeneratorPage>
           ],
         ),
       ),
-      // drawer: const Drawer(child: SymbolPage()),
-      // onDrawerChanged: (isOpen) {
-      //   if (!isOpen) {
-      //     _createSymbolSet();
-      //   }
-      // },
     );
   }
 }
