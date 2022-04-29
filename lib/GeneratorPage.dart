@@ -190,6 +190,7 @@ class GeneratorPageState extends State<GeneratorPage>
 
   void copyToClipboad() {
     Clipboard.setData(ClipboardData(text: _createdRandomPassword));
+    debugPrint("copy");
   }
 
   @override
@@ -359,23 +360,17 @@ class GeneratorPageState extends State<GeneratorPage>
                     backgroundColor: Colors.green,
                   ),
                 ),
-                const SizedBox(height: 10),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(10, 0, 10, 60),
-                  width: deviceWidth,
-                  child: FloatingActionButton.extended(
-                    onPressed: copyToClipboad,
-                    heroTag: 'hero2',
-                    tooltip: 'copypass',
-                    label: const Text('Copy'),
-                    icon: Transform.scale(
-                        scale: 1.5, child: const Icon(Icons.copy_sharp)),
-                    // backgroundColor: Colors.greenAccent,
-                  ),
-                ),
               ],
             ),
           ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.large(
+        onPressed: copyToClipboad,
+        child: Center(
+          child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [const Icon(Icons.copy_sharp), Text('copy')]),
         ),
       ),
     );

@@ -123,6 +123,7 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
       //     ),
       //   ],
       // ),
+      
       bottomNavigationBar: ClipRRect(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         child: WaterDropNavBar(
@@ -139,6 +140,7 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
                 curve: Curves.easeOutQuad);
           },
           selectedIndex: _selectedIndex,
+          iconSize: 34,
           barItems: <BarItem>[
             BarItem(
               filledIcon: Icons.settings,
