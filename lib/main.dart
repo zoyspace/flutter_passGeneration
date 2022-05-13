@@ -2,12 +2,23 @@ import 'package:flutter/material.dart';
 
 import 'GeneratorPage.dart';
 import 'SymbolPage.dart';
-import 'NextPage.dart';
+import 'DonationPage.dart';
+
+import 'package:provider/provider.dart';
+import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
 
 final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
-String aaa = 'aa';
 void main() {
-  runApp(const MyApp());
+  runApp(
+    /// Providers are above [MyApp] instead of inside it, so that tests
+    /// can use [MyApp] while mocking the providers
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => SymbolsSetProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -41,15 +52,8 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidget extends State<MyStatefulWidget> {
   List<Widget> pageList = <Widget>[];
   int _selectedIndex = 1;
-  final PageController _pageController =
-      PageController(initialPage: 1, keepPage: true);
-  void _onTappedBar(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    _pageController.animateToPage(index,
-        duration: const Duration(milliseconds: 10), curve: Curves.ease);
-  }
+  final PageController _pageController = PageController(initialPage: 1);
+
   // void _onTappedBar(int value) { // pageview
   //   setState(() {
   //     _selectedIndex = value;
@@ -60,10 +64,11 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
   @override
   void initState() {
     pageList.add(const SymbolPage());
-    pageList.add(GeneratorPage(
-      key: globalKey_GeneratorPageState,
-    ));
-    pageList.add(const NextPage());
+    pageList.add(GeneratorPage());
+    // pageList.add(GeneratorPage(
+    //   key: globalKey_GeneratorPageState,
+    // ));
+    pageList.add(const DonationPage());
     super.initState();
   }
 
@@ -73,10 +78,12 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
     super.dispose();
   }
 
-  GlobalKey globalKey_GeneratorPageState = GlobalKey<GeneratorPageState>();
+  // GlobalKey globalKey_GeneratorPageState = GlobalKey<GeneratorPageState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade300,
+
       body:
           // appBar: AppBar(
           //   title: const Text('Select symbol'),
@@ -97,24 +104,55 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
       //   // globalKey_GeneratorPageState.currentState?.createSymbolSet();
       // },
 
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: _onTappedBar,
-        currentIndex: _selectedIndex,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'SYMBOLS',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'HOME',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.volunteer_activism),
-            label: 'DONATION',
-          ),
-        ],
+      // bottomNavigationBar: BottomNavigationBar(
+      //   onTap: _onTappedBar,
+      //   currentIndex: _selectedIndex,
+      //   type: BottomNavigationBarType.fixed,
+      //   items: const [
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.settings),
+      //       label: 'SYMBOLS',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.home),
+      //       label: 'HOME',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.volunteer_activism),
+      //       label: 'DONATION',
+      //     ),
+      //   ],
+      // ),
+
+      bottomNavigationBar: ClipRRect(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        child: WaterDropNavBar(
+          // backgroundColor:Colors.grey.shade300,
+          inactiveIconColor: Colors.grey.shade300,
+          waterDropColor: Colors.grey.shade300,
+          backgroundColor: Colors.green,
+          onItemSelected: (int index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+            _pageController.animateToPage(_selectedIndex,
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.easeOutQuad);
+          },
+          selectedIndex: _selectedIndex,
+          iconSize: 34,
+          barItems: <BarItem>[
+            BarItem(
+              filledIcon: Icons.settings,
+              outlinedIcon: Icons.settings_outlined,
+            ),
+            BarItem(filledIcon: Icons.home, outlinedIcon: Icons.home_outlined),
+            BarItem(
+              filledIcon: Icons.volunteer_activism,
+              outlinedIcon: Icons.volunteer_activism_outlined,
+            ),
+          ],
+        ),
       ),
     );
   }

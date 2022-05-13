@@ -3,9 +3,9 @@
 import 'dart:math'; //random
 import 'package:flutter/services.dart'; // copy to clipboad
 import 'dart:async';
-
+import 'package:provider/provider.dart'; //provider
 import 'package:flutter/material.dart';
-import 'NewfloatingButton.dart';
+import 'widgets/NewfloatingButton.dart';
 import 'SymbolPage.dart';
 import 'main.dart';
 
@@ -23,10 +23,7 @@ class GeneratorPage extends StatefulWidget {
 }
 
 class GeneratorPageState extends State<GeneratorPage>
-// with RouteAware {
-    with
-        RouteAware,
-        AutomaticKeepAliveClientMixin {
+    with RouteAware, AutomaticKeepAliveClientMixin {
   @override
   void didChangeDependencies() {
     // 遷移時に呼ばれる関数
@@ -34,6 +31,11 @@ class GeneratorPageState extends State<GeneratorPage>
     super.didChangeDependencies();
     routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
     debugPrint("didChangeDependencies");
+
+    createSymbolSet();
+    if (context.watch<SymbolsSetProvider>().isNotifier) {
+      // setState(() {});
+    }
   }
 
   @override
@@ -74,17 +76,12 @@ class GeneratorPageState extends State<GeneratorPage>
   String _charset = '';
   String _errortext = '';
 
-  String symbolSet1 = '';
-  String symbolSet2 = '';
-  bool isSymbolAllFalse = false;
-
   @override
   void initState() {
     //アプリ起動時に一度だけ実行される
     super.initState();
-
     _generatePassword();
-    createSymbolSet();
+    // _generatePassword(context.read<SymbolsSetProvider>().symbolsSet);
     debugPrint("initState");
     // setState(() {});
   }
@@ -98,6 +95,10 @@ class GeneratorPageState extends State<GeneratorPage>
     routeObserver.unsubscribe(this);
     super.dispose();
   }
+
+  String symbolSet1 = '';
+  String symbolSet2 = '';
+  bool isSymbolAllFalse = false;
 
   void createSymbolSet() {
     symbolSet1 = '';
@@ -134,7 +135,7 @@ class GeneratorPageState extends State<GeneratorPage>
         border: Border.all(color: Colors.green.shade300),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Text(
+      child: SelectableText(
         _createdRandomPassword,
         style: TextStyle(fontSize: _passFontsize),
       ),
@@ -147,7 +148,6 @@ class GeneratorPageState extends State<GeneratorPage>
     const integerSet = '0123456789';
 
     _charset = '';
-    createSymbolSet();
     if (_isSmall) {
       _charset = _charset + smallLetterSet;
     }
@@ -190,6 +190,7 @@ class GeneratorPageState extends State<GeneratorPage>
 
   void copyToClipboad() {
     Clipboard.setData(ClipboardData(text: _createdRandomPassword));
+    debugPrint("copy");
   }
 
   @override
@@ -221,6 +222,72 @@ class GeneratorPageState extends State<GeneratorPage>
               // mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 BuildPassArea(),
+                const SizedBox(height: 10),
+                Row(children: [
+                  Expanded(flex: 1, child: Container()),
+                  Expanded(
+                      flex: 10,
+                      child: NewfloatingButton(
+                        onTap: () => setState(() {
+                          _isSmall = !_isSmall;
+                        }),
+                        isButtonPressed: _isSmall,
+                        partExample: 'abc...z',
+                        partPass: 'Lower',
+                      )),
+                  // _isSmall, 'abc...z', ' Lower'))),
+                  Expanded(flex: 1, child: Container()),
+                  Expanded(
+                      flex: 10,
+                      child: NewfloatingButton(
+                        onTap: () => setState(() {
+                          _isBig = !_isBig;
+                        }),
+                        isButtonPressed: _isBig,
+                        partExample: 'ABC...Z',
+                        partPass: 'Upper',
+                      )),
+                  Expanded(flex: 1, child: Container()),
+                ]),
+                Container(
+                  height: 20,
+                ),
+                Row(children: [
+                  Expanded(flex: 1, child: Container()),
+                  Expanded(
+                      flex: 10,
+                      child: NewfloatingButton(
+                        onTap: () => setState(() {
+                          _isInteger = !_isInteger;
+                        }),
+                        isButtonPressed: _isInteger,
+                        partExample: '012...9',
+                        partPass: 'Numbers',
+                      )),
+                  // _isInteger, '012...9', ' Numbers'))),
+                  Expanded(flex: 1, child: Container()),
+                  Expanded(
+                      flex: 10,
+                      child: NewfloatingButton(
+                        onTap: () => setState(() {
+                          isSymbol = !isSymbol;
+                          if (isSymbolAllFalse == true && isSymbol == true) {
+                            symbolMap.forEach((key, value) {
+                              symbolMap[key] = true;
+                            });
+                            createSymbolSet();
+                          }
+                        }),
+                        isButtonPressed: isSymbol,
+                        partExample: (isSymbolAllFalse) ? 'No' : symbolSet1,
+                        partPass: (isSymbolAllFalse) ? 'Symbols' : symbolSet2,
+                      )),
+
+                  Expanded(flex: 1, child: Container()),
+                ]),
+                SizedBox(
+                  height: 10,
+                ),
                 Row(children: <Widget>[
                   const SizedBox(width: 10),
                   Expanded(
@@ -281,75 +348,13 @@ class GeneratorPageState extends State<GeneratorPage>
                   const SizedBox(width: 10),
                 ]),
                 const SizedBox(height: 10),
-                Row(children: [
-                  Expanded(flex: 1, child: Container()),
-                  Expanded(
-                      flex: 10,
-                      child: NewfloatingButton(
-                        onTap: () => setState(() {
-                          _isSmall = !_isSmall;
-                        }),
-                        isButtonPressed: _isSmall,
-                        partExample: 'abc...z',
-                        partPass: 'Lower',
-                      )),
-                  // _isSmall, 'abc...z', ' Lower'))),
-                  Expanded(flex: 1, child: Container()),
-                  Expanded(
-                      flex: 10,
-                      child: NewfloatingButton(
-                        onTap: () => setState(() {
-                          _isBig = !_isBig;
-                        }),
-                        isButtonPressed: _isBig,
-                        partExample: 'ABC...Z',
-                        partPass: 'Upper',
-                      )),
-                  Expanded(flex: 1, child: Container()),
-                ]),
-                Container(
-                  height: 20,
-                ),
-                Row(children: [
-                  Expanded(flex: 1, child: Container()),
-                  Expanded(
-                      flex: 10,
-                      child: NewfloatingButton(
-                        onTap: () => setState(() {
-                          _isInteger = !_isInteger;
-                        }),
-                        isButtonPressed: _isInteger,
-                        partExample: '012...9',
-                        partPass: 'Numbers',
-                      )),
-                  // _isInteger, '012...9', ' Numbers'))),
-                  Expanded(flex: 1, child: Container()),
-                  Expanded(
-                      flex: 10,
-                      child: NewfloatingButton(
-                        onTap: () => setState(() {
-                          isSymbol = !isSymbol;
-                          if (isSymbolAllFalse == true && isSymbol == true) {
-                            symbolMap.forEach((key, value) {
-                              symbolMap[key] = true;
-                            });
-                          }
-                          createSymbolSet();
-                        }),
-                        isButtonPressed: isSymbol,
-                        partExample: (isSymbolAllFalse) ? 'No' : symbolSet1,
-                        partPass: (isSymbolAllFalse) ? 'Symbols' : symbolSet2,
-                      )),
-
-                  Expanded(flex: 1, child: Container()),
-                ]),
-                const SizedBox(height: 30),
                 Container(
                   margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                   width: deviceWidth,
                   child: FloatingActionButton.extended(
                     // onPressed: _generatePassword,
-                    onPressed: _generatePassword,
+                    // onPressed: copyToClipboad,
+                    onPressed: () => {_generatePassword()},
                     heroTag: 'hero1',
                     tooltip: 'generator',
                     label: const Text('Create'),
@@ -358,31 +363,19 @@ class GeneratorPageState extends State<GeneratorPage>
                     backgroundColor: Colors.green,
                   ),
                 ),
-                const SizedBox(height: 10),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(10, 0, 10, 60),
-                  width: deviceWidth,
-                  child: FloatingActionButton.extended(
-                    onPressed: copyToClipboad,
-                    heroTag: 'hero2',
-                    tooltip: 'copypass',
-                    label: const Text('Copy'),
-                    icon: Transform.scale(
-                        scale: 1.5, child: const Icon(Icons.copy_sharp)),
-                    // backgroundColor: Colors.greenAccent,
-                  ),
-                ),
               ],
             ),
           ],
         ),
       ),
-      // drawer: const Drawer(child: SymbolPage()),
-      // onDrawerChanged: (isOpen) {
-      //   if (!isOpen) {
-      //     _createSymbolSet();
-      //   }
-      // },
+      floatingActionButton: FloatingActionButton.large(
+        onPressed: copyToClipboad,
+        child: Center(
+          child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [const Icon(Icons.copy_sharp), Text('copy')]),
+        ),
+      ),
     );
   }
 }
