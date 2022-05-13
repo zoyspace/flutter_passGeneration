@@ -5,7 +5,7 @@ import 'package:flutter/services.dart'; // copy to clipboad
 import 'dart:async';
 import 'package:provider/provider.dart'; //provider
 import 'package:flutter/material.dart';
-import 'NewfloatingButton.dart';
+import 'widgets/NewfloatingButton.dart';
 import 'SymbolPage.dart';
 import 'main.dart';
 
@@ -135,7 +135,7 @@ class GeneratorPageState extends State<GeneratorPage>
         border: Border.all(color: Colors.green.shade300),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Text(
+      child: SelectableText(
         _createdRandomPassword,
         style: TextStyle(fontSize: _passFontsize),
       ),
@@ -222,65 +222,6 @@ class GeneratorPageState extends State<GeneratorPage>
               // mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 BuildPassArea(),
-                Row(children: <Widget>[
-                  const SizedBox(width: 10),
-                  Expanded(
-                    flex: 7,
-                    child: Slider(
-                      value: _currentSliderValue,
-                      max: _maxSize.toDouble(),
-                      min: 1,
-                      divisions: _maxSize - 1,
-                      label: _currentSliderValue.round().toString(),
-                      onChanged: (double value) {
-                        setState(() {
-                          _currentSliderValue = value;
-                          myController.text = value.toInt().toString();
-                          _length = value.toInt();
-                          _errortext = '';
-
-                          _generatePassword();
-                        });
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: TextField(
-                      style: const TextStyle(fontSize: 25),
-
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      decoration: InputDecoration(
-                        hintText: _length.toString(),
-                        errorText: _errortext,
-                        border: InputBorder.none,
-                      ),
-                      controller: myController,
-
-                      // onChanged: (text) {
-                      onChanged: (text) {
-                        if (int.tryParse(text) != null &&
-                            int.parse(text) > 0 &&
-                            int.parse(text) < _maxSize + 1) {
-                          // print('First text field: $text');
-                          setState(() {
-                            _length = int.parse(text);
-                            _currentSliderValue = double.parse(text);
-                            _errortext = '';
-                            _generatePassword();
-                          });
-                        } else {
-                          setState(() {
-                            _errortext = '1 to $_maxSize';
-                            myController.clear();
-                          });
-                        }
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                ]),
                 const SizedBox(height: 10),
                 Row(children: [
                   Expanded(flex: 1, child: Container()),
@@ -344,7 +285,69 @@ class GeneratorPageState extends State<GeneratorPage>
 
                   Expanded(flex: 1, child: Container()),
                 ]),
-                const SizedBox(height: 30),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(children: <Widget>[
+                  const SizedBox(width: 10),
+                  Expanded(
+                    flex: 7,
+                    child: Slider(
+                      value: _currentSliderValue,
+                      max: _maxSize.toDouble(),
+                      min: 1,
+                      divisions: _maxSize - 1,
+                      label: _currentSliderValue.round().toString(),
+                      onChanged: (double value) {
+                        setState(() {
+                          _currentSliderValue = value;
+                          myController.text = value.toInt().toString();
+                          _length = value.toInt();
+                          _errortext = '';
+
+                          _generatePassword();
+                        });
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: TextField(
+                      style: const TextStyle(fontSize: 25),
+
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      decoration: InputDecoration(
+                        hintText: _length.toString(),
+                        errorText: _errortext,
+                        border: InputBorder.none,
+                      ),
+                      controller: myController,
+
+                      // onChanged: (text) {
+                      onChanged: (text) {
+                        if (int.tryParse(text) != null &&
+                            int.parse(text) > 0 &&
+                            int.parse(text) < _maxSize + 1) {
+                          // print('First text field: $text');
+                          setState(() {
+                            _length = int.parse(text);
+                            _currentSliderValue = double.parse(text);
+                            _errortext = '';
+                            _generatePassword();
+                          });
+                        } else {
+                          setState(() {
+                            _errortext = '1 to $_maxSize';
+                            myController.clear();
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                ]),
+                const SizedBox(height: 10),
                 Container(
                   margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                   width: deviceWidth,

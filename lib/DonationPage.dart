@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import 'ad_banner.dart';
+import 'widgets/AdBanner.dart';
 
-class NextPage extends StatelessWidget {
-  const NextPage({Key? key}) : super(key: key);
+class DonationPage extends StatelessWidget {
+  const DonationPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

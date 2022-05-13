@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'GeneratorPage.dart';
 import 'SymbolPage.dart';
-import 'NextPage.dart';
+import 'DonationPage.dart';
 
 import 'package:provider/provider.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
@@ -68,7 +68,7 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
     // pageList.add(GeneratorPage(
     //   key: globalKey_GeneratorPageState,
     // ));
-    pageList.add(const NextPage());
+    pageList.add(const DonationPage());
     super.initState();
   }
 
@@ -123,7 +123,7 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
       //     ),
       //   ],
       // ),
-      
+
       bottomNavigationBar: ClipRRect(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         child: WaterDropNavBar(
