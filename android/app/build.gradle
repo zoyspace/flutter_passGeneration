@@ -44,8 +44,8 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.pass_gene"
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
+        minSdkVersion 22        //flutter.minSdkVersion 修正
+        targetSdkVersion 31     //flutter.targetSdkVersion　修正
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
