@@ -19,7 +19,7 @@ class NewfloatingButton extends StatelessWidget {
     return GestureDetector(
         onTap: onTap,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 100),
+          duration: Duration(milliseconds: 10),
           height: 60,
           width: 160,
           decoration: BoxDecoration(

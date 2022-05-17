@@ -95,6 +95,20 @@ class GeneratorPageState extends State<GeneratorPage>
     super.dispose();
   }
 
+  final snackBar = SnackBar(
+      duration: const Duration(milliseconds: 500),
+      backgroundColor: Colors.pink.shade200,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24),
+      ),
+      content: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Icon(
+          Icons.library_add_check,
+          color: Colors.white,
+        ),
+        Text('Copied!'),
+      ]));
+
   String symbolSet1 = '';
   String symbolSet2 = '';
   bool isSymbolAllFalse = false;
@@ -189,7 +203,11 @@ class GeneratorPageState extends State<GeneratorPage>
 
   void copyToClipboad() {
     Clipboard.setData(ClipboardData(text: _createdRandomPassword));
-    debugPrint("copy");
+    ScaffoldMessenger.of(context).removeCurrentSnackBar(
+        // reason: SnackBarClosedReason.remove,
+        );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
