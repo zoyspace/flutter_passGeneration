@@ -96,6 +96,8 @@ class GeneratorPageState extends State<GeneratorPage>
   }
 
   final snackBar = SnackBar(
+      margin: EdgeInsets.all(50),
+      behavior: SnackBarBehavior.floating,
       duration: const Duration(milliseconds: 500),
       backgroundColor: Colors.pink.shade200,
       shape: RoundedRectangleBorder(
