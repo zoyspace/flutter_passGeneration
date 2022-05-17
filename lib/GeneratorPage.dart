@@ -74,7 +74,6 @@ class GeneratorPageState extends State<GeneratorPage>
   bool isSymbol = false;
 
   String _charset = '';
-  String _errortext = '';
 
   @override
   void initState() {
@@ -87,11 +86,11 @@ class GeneratorPageState extends State<GeneratorPage>
   }
 
 // 1. ここでTextEditingControllerを持たせる
-  final myController = TextEditingController(); // textfield
+  // final myController = TextEditingController(); // textfield
 // 2. 必ずdispose()をoverrideして、作ったTextEditingControllerを廃棄する。
   @override
   void dispose() {
-    myController.dispose();
+    // myController.dispose();
     routeObserver.unsubscribe(this);
     super.dispose();
   }
@@ -230,6 +229,7 @@ class GeneratorPageState extends State<GeneratorPage>
                       child: NewfloatingButton(
                         onTap: () => setState(() {
                           _isSmall = !_isSmall;
+                          _generatePassword();
                         }),
                         isButtonPressed: _isSmall,
                         partExample: 'abc...z',
@@ -242,6 +242,7 @@ class GeneratorPageState extends State<GeneratorPage>
                       child: NewfloatingButton(
                         onTap: () => setState(() {
                           _isBig = !_isBig;
+                          _generatePassword();
                         }),
                         isButtonPressed: _isBig,
                         partExample: 'ABC...Z',
@@ -259,6 +260,7 @@ class GeneratorPageState extends State<GeneratorPage>
                       child: NewfloatingButton(
                         onTap: () => setState(() {
                           _isInteger = !_isInteger;
+                          _generatePassword();
                         }),
                         isButtonPressed: _isInteger,
                         partExample: '012...9',
@@ -277,6 +279,7 @@ class GeneratorPageState extends State<GeneratorPage>
                             });
                             createSymbolSet();
                           }
+                          _generatePassword();
                         }),
                         isButtonPressed: isSymbol,
                         partExample: (isSymbolAllFalse) ? 'No' : symbolSet1,
@@ -301,9 +304,7 @@ class GeneratorPageState extends State<GeneratorPage>
                       onChanged: (double value) {
                         setState(() {
                           _currentSliderValue = value;
-                          myController.text = value.toInt().toString();
                           _length = value.toInt();
-                          _errortext = '';
 
                           _generatePassword();
                         });
@@ -312,37 +313,9 @@ class GeneratorPageState extends State<GeneratorPage>
                   ),
                   Expanded(
                     flex: 1,
-                    child: TextField(
+                    child: Text(
+                      _currentSliderValue.round().toString(),
                       style: const TextStyle(fontSize: 25),
-
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      decoration: InputDecoration(
-                        hintText: _length.toString(),
-                        errorText: _errortext,
-                        border: InputBorder.none,
-                      ),
-                      controller: myController,
-
-                      // onChanged: (text) {
-                      onChanged: (text) {
-                        if (int.tryParse(text) != null &&
-                            int.parse(text) > 0 &&
-                            int.parse(text) < _maxSize + 1) {
-                          // print('First text field: $text');
-                          setState(() {
-                            _length = int.parse(text);
-                            _currentSliderValue = double.parse(text);
-                            _errortext = '';
-                            _generatePassword();
-                          });
-                        } else {
-                          setState(() {
-                            _errortext = '1 to $_maxSize';
-                            myController.clear();
-                          });
-                        }
-                      },
                     ),
                   ),
                   const SizedBox(width: 10),

@@ -52,7 +52,7 @@ class _SymbolPage extends State<SymbolPage> {
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
-        title: const Text('Select Symbols'),
+        title: const Text('Settings'),
       ),
       body: GridView.count(
         primary: false,
@@ -62,6 +62,11 @@ class _SymbolPage extends State<SymbolPage> {
         mainAxisSpacing: 10,
         crossAxisCount: 3,
         children: <Widget>[
+          Center(
+              child: Text(
+            'Symbol->',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          )),
           ElevatedButton(
             child: const Text('Select All'),
             style: ElevatedButton.styleFrom(
