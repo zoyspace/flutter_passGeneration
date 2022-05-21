@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'GeneratorPage.dart';
 import 'SymbolPage.dart';
 import 'DonationPage.dart';
+import 'widgets/AppTracking.dart';
 
 import 'package:provider/provider.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
@@ -63,6 +64,8 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) => initPlugin());
+
     pageList.add(const SymbolPage());
     pageList.add(GeneratorPage());
     // pageList.add(GeneratorPage(
