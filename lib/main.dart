@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: _title,
       theme: ThemeData(primarySwatch: Colors.green),
       navigatorObservers: [routeObserver],
