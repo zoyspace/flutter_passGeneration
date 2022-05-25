@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'GeneratorPage.dart';
 import 'SymbolPage.dart';
@@ -12,20 +11,21 @@ import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
 final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.landscapeLeft, DeviceOrientation.portraitUp])
-      .then((_) => {
-            runApp(
-              /// Providers are above [MyApp] instead of inside it, so that tests
-              /// can use [MyApp] while mocking the providers
-              MultiProvider(
-                providers: [
-                  ChangeNotifierProvider(create: (_) => SymbolsSetProvider()),
-                ],
-                child: const MyApp(),
-              ),
-            )
-          });
+
+  // SystemChrome.setPreferredOrientations(
+  //         [DeviceOrientation.landscapeLeft, DeviceOrientation.portraitUp])
+  //     .then((_) => {
+  runApp(
+    /// Providers are above [MyApp] instead of inside it, so that tests
+    /// can use [MyApp] while mocking the providers
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => SymbolsSetProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
+  // });
 }
 
 class MyApp extends StatelessWidget {
