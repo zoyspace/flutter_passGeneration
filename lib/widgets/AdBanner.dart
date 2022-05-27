@@ -17,9 +17,17 @@ class AdBanner extends StatelessWidget {
         size: this.size,
         adUnitId: bannerAdUnitId[os == TargetPlatform.iOS ? 'ios' : 'android']!,
         listener: BannerAdListener(
-          onAdLoaded: (Ad ad) => {debugPrint('Ad loaded.')},
+          onAdLoaded: (Ad ad) => {
+            debugPrint('Ad loaded.'),
+            debugPrint(
+              bannerAdUnitId[os == TargetPlatform.iOS ? 'ios' : 'android']!,
+            )
+          },
           onAdFailedToLoad: (Ad ad, LoadAdError error) {
             debugPrint('Ad failed to load: $error');
+            debugPrint(
+              bannerAdUnitId[os == TargetPlatform.iOS ? 'ios' : 'android']!,
+            );
           },
           onAdOpened: (Ad ad) => debugPrint('Ad opened.'),
           onAdClosed: (Ad ad) => debugPrint('Ad closed.'),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'GeneratorPage.dart';
 import 'SymbolPage.dart';
@@ -11,6 +12,7 @@ import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
 final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
 
   // SystemChrome.setPreferredOrientations(
   //         [DeviceOrientation.landscapeLeft, DeviceOrientation.portraitUp])
