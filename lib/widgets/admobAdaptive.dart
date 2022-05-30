@@ -34,11 +34,11 @@ class _AnchoredAdaptiveAdmobState extends State<AnchoredAdaptiveAdmob> {
       // TODO replace these test ad units with your own ad unit.
       adUnitId: Platform.isAndroid
           // test unitID
-          // ? 'ca-app-pub-3940256099942544/6300978111' //android
-          // : 'ca-app-pub-3940256099942544/2934735716', //ios
-          //リリース　unitid
-          ? 'ca-app-pub-6147471144580591/7187192436' //android
-          : 'ca-app-pub-6147471144580591/9464450539', //ios
+          ? 'ca-app-pub-3940256099942544/6300978111' //android
+          : 'ca-app-pub-3940256099942544/2934735716', //ios
+      //リリース　unitid
+      // ? 'ca-app-pub-6147471144580591/7187192436' //android
+      // : 'ca-app-pub-6147471144580591/9464450539', //ios
 
       size: size,
       request: AdRequest(),
