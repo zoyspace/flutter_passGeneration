@@ -51,6 +51,7 @@ const Map<String, String> bannerAdUnitId = kReleaseMode // bool kReleaseMode
         'android': 'ca-app-pub-6147471144580591/7187192436',
       }
     : {
+        // test unitID
         'ios': 'ca-app-pub-3940256099942544/2934735716',
         'android': 'ca-app-pub-3940256099942544/6300978111',
       };
