@@ -1,4 +1,4 @@
-package com.example.pass_gene
+package com.pro.passGene
 
 import io.flutter.embedding.android.FlutterActivity
 
