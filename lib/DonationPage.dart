@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:async';
 
-import 'widgets/AdBanner.dart';
+import 'widgets/admobBanner.dart';
 
 class DonationPage extends StatelessWidget {
   const DonationPage({Key? key}) : super(key: key);
@@ -15,7 +15,7 @@ class DonationPage extends StatelessWidget {
           title: const Text('Please Click'),
         ),
         body: Center(
-          child: AdBanner(size: AdSize.banner),
+          child: AnchoredAdaptiveAdmob(),
           // child: Column(mainAxisSize: MainAxisSize.min, children: [
           // AdBanner(size: AdSize.banner),
           // SizedBox(

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart'; //kReleaseMode
 
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -15,12 +16,15 @@ class _AnchoredAdaptiveAdmobState extends State<AnchoredAdaptiveAdmob> {
 
   @override
   void didChangeDependencies() {
+    debugPrint("_unitId");
+
     super.didChangeDependencies();
     _loadAd();
+    debugPrint(_unitId);
   }
 
   Future<void> _loadAd() async {
-    // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
+    // Get an BannerAdSize before loading the ad.
     final AnchoredAdaptiveBannerAdSize? size =
         await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
             MediaQuery.of(context).size.width.truncate());
@@ -31,20 +35,12 @@ class _AnchoredAdaptiveAdmobState extends State<AnchoredAdaptiveAdmob> {
     }
 
     _anchoredAdaptiveAd = BannerAd(
-      // TODO replace these test ad units with your own ad unit.
-      adUnitId: Platform.isAndroid
-          // test unitID
-          ? 'ca-app-pub-3940256099942544/6300978111' //android
-          : 'ca-app-pueb-3940256099942544/2934735716', //ios
-      //リリース　unitid
-      // ? 'ca-app-pub-6147471144580591/7187192436' //android
-      // : 'ca-app-pub-6147471144580591/9464450539', //ios
-
+      adUnitId: _unitId,
       size: size,
       request: AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
-          print('$ad loaded: ${ad.responseInfo}');
+          print('loaded: ${ad}');
           setState(() {
             // When the ad is loaded, get the ad size and use it to set
             // the height of the ad container.
@@ -84,3 +80,13 @@ class _AnchoredAdaptiveAdmobState extends State<AnchoredAdaptiveAdmob> {
     _anchoredAdaptiveAd?.dispose();
   }
 }
+
+final String _unitId = kReleaseMode //bool kReleaseMode
+    ? Platform.isAndroid
+        //release　unitid
+        ? 'ca-app-pub-6147471144580591/7187192436' //release android
+        : 'ca-app-pub-6147471144580591/9464450539' //release ios
+    : Platform.isAndroid
+        // test unitID
+        ? 'ca-app-pub-3940256099942544/6300978111' //test android
+        : 'ca-app-pub-3940256099942544/2934735716'; //test ios

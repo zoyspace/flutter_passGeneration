@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:pass_gene/widgets/admobAdaptive.dart';
+import 'package:pass_gene/widgets/admobBanner.dart';
 
 import 'GeneratorPage.dart';
 import 'SymbolPage.dart';
@@ -82,6 +82,7 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
     //   key: globalKey_GeneratorPageState,
     // ));
     // pageList.add(const DonationPage());
+    // pageList.add(AdmobBanner());
     pageList.add(AnchoredAdaptiveAdmob());
     super.initState();
   }

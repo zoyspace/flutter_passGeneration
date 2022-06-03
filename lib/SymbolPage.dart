@@ -64,7 +64,7 @@ class _SymbolPage extends State<SymbolPage> {
         children: <Widget>[
           Center(
               child: Text(
-            'Symbol->',
+            'Symbols',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           )),
           ElevatedButton(
@@ -123,15 +123,18 @@ class _SymbolPage extends State<SymbolPage> {
                                   )
                                 : const Icon(
                                     Icons.check_box_outline_blank_outlined,
-                                    color: Colors.black)),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
+                                    color: Colors.grey)),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            child: Text(
                           key,
-                          style: const TextStyle(
-                              fontSize: 30, color: Colors.black),
-                        ),
+                          style: TextStyle(
+                              fontSize: 30,
+                              color: (symbolMap[key])
+                                  ? Colors.black
+                                  : Colors.grey),
+                        )),
+                        Expanded(flex: 1, child: Container()),
                       ],
                     ))),
         ],

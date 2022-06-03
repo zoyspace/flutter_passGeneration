@@ -309,7 +309,7 @@ class GeneratorPageState extends State<GeneratorPage>
                   Expanded(flex: 1, child: Container()),
                 ]),
                 SizedBox(
-                  height: 10,
+                  height: 30,
                 ),
                 Row(children: <Widget>[
                   const SizedBox(width: 10),
@@ -340,7 +340,7 @@ class GeneratorPageState extends State<GeneratorPage>
                   ),
                   const SizedBox(width: 10),
                 ]),
-                const SizedBox(height: 10),
+                const SizedBox(height: 30),
                 Container(
                   margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                   width: deviceWidth,
