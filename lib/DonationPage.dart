@@ -10,23 +10,23 @@ class DonationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey.shade300,
-        appBar: AppBar(
-          title: const Text('Please Click'),
-        ),
-        body: Center(
-          child: AnchoredAdaptiveAdmob(),
-          // child: Column(mainAxisSize: MainAxisSize.min, children: [
-          // AdBanner(size: AdSize.banner),
-          // SizedBox(
-          //   height: 30,
-          // ),
-          // AdBanner(size: AdSize.banner),
-          // SizedBox(
-          //   height: 30,
-          // ),
-          // AdBanner(size: AdSize.banner),
-          // ]),
-        ));
+      backgroundColor: Colors.grey.shade300,
+      appBar: AppBar(
+        title: const Text('Please Click'),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AdmobBanner(),
+          SizedBox(
+            height: 30,
+          ),
+          Image.asset(
+            'assets/app-store-badge.png',
+            fit: BoxFit.cover,
+          )
+        ],
+      ),
+    );
   }
 }

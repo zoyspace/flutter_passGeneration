@@ -83,7 +83,7 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
     // ));
     // pageList.add(const DonationPage());
     // pageList.add(AdmobBanner());
-    pageList.add(AnchoredAdaptiveAdmob());
+    pageList.add(DonationPage());
     super.initState();
   }
 

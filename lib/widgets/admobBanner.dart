@@ -1,16 +1,16 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart'; //kReleaseMode
-
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 /// This example demonstrates anchored adaptive banner ads.
-class AnchoredAdaptiveAdmob extends StatefulWidget {
+class AdmobBanner extends StatefulWidget {
   @override
-  _AnchoredAdaptiveAdmobState createState() => _AnchoredAdaptiveAdmobState();
+  _AdmobBannerState createState() => _AdmobBannerState();
 }
 
-class _AnchoredAdaptiveAdmobState extends State<AnchoredAdaptiveAdmob> {
+class _AdmobBannerState extends State<AdmobBanner> {
   BannerAd? _anchoredAdaptiveAd;
   bool _isLoaded = false;
 
@@ -58,21 +58,24 @@ class _AnchoredAdaptiveAdmobState extends State<AnchoredAdaptiveAdmob> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        backgroundColor: Colors.grey.shade300,
-        appBar: AppBar(
-          title: Text('please'),
-        ),
-        body: Center(
-            child: (_anchoredAdaptiveAd != null && _isLoaded)
-                ? Container(
-                    color: Colors.green,
-                    width: _anchoredAdaptiveAd!.size.width.toDouble(),
-                    height: _anchoredAdaptiveAd!.size.height.toDouble(),
-                    child: AdWidget(ad: _anchoredAdaptiveAd!),
-                  )
-                : Text('Please review if you like this app')),
-      );
+  // Widget build(BuildContext context) => Scaffold(
+  // backgroundColor: Colors.grey.shade300,
+  // appBar: AppBar(
+  //   title: Text('please'),
+  // ),
+  // body:
+  // admob
+  Widget build(BuildContext context) {
+    return (_anchoredAdaptiveAd != null && _isLoaded)
+        ? Container(
+            color: Colors.green,
+            width: _anchoredAdaptiveAd!.size.width.toDouble(),
+            height: _anchoredAdaptiveAd!.size.height.toDouble(),
+            child: AdWidget(ad: _anchoredAdaptiveAd!),
+          )
+        // : Text('Please review if you like this app')
+        : CircularProgressIndicator();
+  }
 
   @override
   void dispose() {
