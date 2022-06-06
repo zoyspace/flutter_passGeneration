@@ -15,11 +15,9 @@ class _AdmobBannerState extends State<AdmobBanner> {
 
   @override
   void didChangeDependencies() {
-    debugPrint("_unitId");
-
     super.didChangeDependencies();
     _loadAd();
-    debugPrint(_unitId);
+    // debugPrint(_unitId);
   }
 
   Future<void> _loadAd() async {
@@ -72,7 +70,6 @@ class _AdmobBannerState extends State<AdmobBanner> {
             height: _anchoredAdaptiveAd!.size.height.toDouble(),
             child: AdWidget(ad: _anchoredAdaptiveAd!),
           )
-        // : Text('Please review if you like this app')
         : CircularProgressIndicator();
   }
 
