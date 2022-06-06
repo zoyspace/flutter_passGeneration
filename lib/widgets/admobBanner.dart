@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart'; //kReleaseMode
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
