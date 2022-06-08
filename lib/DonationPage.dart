@@ -42,7 +42,10 @@ class DonationPage extends StatelessWidget {
 }
 
 final Uri _url = Uri.parse(
-    'https://apps.apple.com/jp/app/randompasswordgenerator/id1619751753');
+    'https://apps.apple.com/jp/app/randompasswordgenerator/id1619751753'
+    // 'https://flutter.dev/'
+    );
 void _launchUrl() async {
-  if (!await launchUrl(_url)) throw 'Could not launch $_url';
+  if (!await launchUrl(_url, mode: LaunchMode.externalApplication))
+    throw 'Could not launch $_url';
 }

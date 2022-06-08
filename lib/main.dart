@@ -163,8 +163,8 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
             ),
             BarItem(filledIcon: Icons.home, outlinedIcon: Icons.home_outlined),
             BarItem(
-              filledIcon: Icons.volunteer_activism,
-              outlinedIcon: Icons.volunteer_activism_outlined,
+              filledIcon: Icons.info,
+              outlinedIcon: Icons.info_outlined,
             ),
           ],
         ),
