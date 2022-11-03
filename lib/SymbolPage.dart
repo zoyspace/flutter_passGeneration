@@ -104,7 +104,7 @@ class _SymbolPage extends State<SymbolPage> {
                   symbolPrvider.isNotifier = true;
                 },
                 child: Container(
-                    padding: const EdgeInsets.all(5.0),
+                    // padding: const EdgeInsets.all(5.0),
                     decoration: BoxDecoration(
                       color: (symbolMap[key])
                           ? Colors.green.shade200
@@ -114,16 +114,16 @@ class _SymbolPage extends State<SymbolPage> {
                     ),
                     child: Row(
                       children: [
-                        Transform.scale(
-                            scale: 1,
-                            child: (symbolMap[key])
-                                ? const Icon(
-                                    Icons.check_box_outlined,
-                                    color: Colors.black,
-                                  )
-                                : const Icon(
-                                    Icons.check_box_outline_blank_outlined,
-                                    color: Colors.grey)),
+                        // Transform.scale(
+                        //     scale: 1,
+                        //     child: (symbolMap[key])
+                        //         ? const Icon(
+                        //             Icons.check_box_outlined,
+                        //             color: Colors.black,
+                        //           )
+                        //         : const Icon(
+                        //             Icons.check_box_outline_blank_outlined,
+                        //             color: Colors.grey)),
                         Expanded(flex: 1, child: Container()),
                         Expanded(
                             child: Text(
