@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:pass_gene/historyPage.dart';
 import 'package:pass_gene/widgets/admobBanner.dart';
 
 import 'GeneratorPage.dart';
 import 'SymbolPage.dart';
-import 'DonationPage.dart';
 import 'widgets/AppTracking.dart';
 
 import 'package:provider/provider.dart';
@@ -78,7 +78,7 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
 
     pageList.add(const SymbolPage());
     pageList.add(const GeneratorPage());
-    pageList.add(const DonationPage());
+    pageList.add(const HistoryPage());
     _selectedIndex = 1;
     super.initState();
   }
@@ -159,8 +159,8 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
             ),
             BarItem(filledIcon: Icons.home, outlinedIcon: Icons.home_outlined),
             BarItem(
-              filledIcon: Icons.info,
-              outlinedIcon: Icons.info_outlined,
+              filledIcon: Icons.history,
+              outlinedIcon: Icons.history_outlined,
             ),
           ],
         ),

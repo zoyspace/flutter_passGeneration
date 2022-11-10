@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 Map symbolMap = <String, bool>{
   '-': true, //ハイフン
@@ -44,6 +45,15 @@ class _SymbolPage extends State<SymbolPage> {
   @override
   void initState() {
     super.initState();
+  }
+
+  final Uri _url = Uri.parse(
+      'https://apps.apple.com/jp/app/randompasswordgenerator/id1619751753'
+      // 'https://flutter.dev/'
+      );
+  void _launchUrl() async {
+    if (!await launchUrl(_url, mode: LaunchMode.externalApplication))
+      throw 'Could not launch $_url';
   }
 
   Widget build(BuildContext context) {
@@ -104,39 +114,33 @@ class _SymbolPage extends State<SymbolPage> {
                   symbolPrvider.isNotifier = true;
                 },
                 child: Container(
-                    // padding: const EdgeInsets.all(5.0),
-                    decoration: BoxDecoration(
-                      color: (symbolMap[key])
-                          ? Colors.green.shade200
-                          : Colors.white,
-                      // border: Border.all(color: Colors.green),
-                      borderRadius: BorderRadius.circular(5),
+                  // padding: const EdgeInsets.all(5.0),
+                  decoration: BoxDecoration(
+                    color:
+                        (symbolMap[key]) ? Colors.green.shade200 : Colors.white,
+                    // border: Border.all(color: Colors.green),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Center(
+                    child: Text(
+                      key,
+                      style: TextStyle(
+                          fontSize: 30,
+                          color: (symbolMap[key]) ? Colors.black : Colors.grey),
                     ),
-                    child: Row(
-                      children: [
-                        // Transform.scale(
-                        //     scale: 1,
-                        //     child: (symbolMap[key])
-                        //         ? const Icon(
-                        //             Icons.check_box_outlined,
-                        //             color: Colors.black,
-                        //           )
-                        //         : const Icon(
-                        //             Icons.check_box_outline_blank_outlined,
-                        //             color: Colors.grey)),
-                        Expanded(flex: 1, child: Container()),
-                        Expanded(
-                            child: Text(
-                          key,
-                          style: TextStyle(
-                              fontSize: 30,
-                              color: (symbolMap[key])
-                                  ? Colors.black
-                                  : Colors.grey),
-                        )),
-                        Expanded(flex: 1, child: Container()),
-                      ],
-                    ))),
+                  ),
+                )),
+          Center(child: Text('please write review if you like this app!')),
+          GestureDetector(
+              onTap: () {
+                _launchUrl();
+              },
+              child: Transform.scale(
+                  scale: 1,
+                  child: Image.asset(
+                    'assets/app-store-badge.png',
+                    fit: BoxFit.fitWidth,
+                  ))),
         ],
       ),
     );

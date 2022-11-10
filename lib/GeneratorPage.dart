@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:provider/provider.dart'; //provider
 import 'package:flutter/material.dart';
 import 'widgets/NewfloatingButton.dart';
+import 'widgets/HistoryViewModel.dart';
 import 'SymbolPage.dart';
 import 'main.dart';
 
@@ -98,7 +99,7 @@ class GeneratorPageState extends State<GeneratorPage>
   final snackBar = SnackBar(
       margin: EdgeInsets.all(50),
       behavior: SnackBarBehavior.floating,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 700),
       backgroundColor: Colors.pink.shade200,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
@@ -147,7 +148,7 @@ class GeneratorPageState extends State<GeneratorPage>
       height: 150,
       decoration: BoxDecoration(
         color: Colors.green.shade50,
-        border: Border.all(color: Colors.green.shade300),
+        // border: Border.all(color: Colors.black54),
         borderRadius: BorderRadius.circular(10),
       ),
       child: SelectableText(
@@ -201,6 +202,8 @@ class GeneratorPageState extends State<GeneratorPage>
     setState(() {
       _createdRandomPassword = randomStr;
     });
+
+    HistoryViewModel.createItem(randomStr, _length);
   }
 
   void copyToClipboad() {
@@ -241,7 +244,7 @@ class GeneratorPageState extends State<GeneratorPage>
               // mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 BuildPassArea(),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 Row(children: [
                   Expanded(flex: 1, child: Container()),
                   Expanded(

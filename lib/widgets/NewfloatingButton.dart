@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class NewfloatingButton extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
   final onTap;
@@ -14,6 +15,7 @@ class NewfloatingButton extends StatelessWidget {
     required this.partExample,
     required this.partPass,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
