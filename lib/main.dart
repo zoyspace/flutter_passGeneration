@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:isar/isar.dart';
 import 'package:pass_gene/historyPage.dart';
 import 'package:pass_gene/widgets/admobBanner.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'GeneratorPage.dart';
 import 'SymbolPage.dart';
 import 'widgets/AppTracking.dart';
+import 'widgets/historyTable.dart';
 
 import 'package:provider/provider.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
 
 final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
-void main() {
+late Isar isar;
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
+  final dir = await getApplicationSupportDirectory();
+  String path = dir.path;
+  isar = await Isar.open(
+    [
+      HistoryTableSchema, //import isarのdartファイルをimportする。
+    ],
+    directory: path,
+  );
 
   // SystemChrome.setPreferredOrientations(
   //         [DeviceOrientation.landscapeLeft, DeviceOrientation.portraitUp])

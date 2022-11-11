@@ -2,7 +2,10 @@ import 'dart:io'; // Platform.isAndroid
 import 'package:flutter/foundation.dart'; //kReleaseMode
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:pass_gene/widgets/HistoryViewModel.dart';
+import 'package:isar/isar.dart';
+import 'package:pass_gene/main.dart';
+import 'package:path_provider/path_provider.dart';
+import 'widgets/historyTable.dart';
 
 // import 'package:pass_gene/widgets/admobBanner.dart';
 
@@ -41,29 +44,31 @@ class _HistoryPageState extends State<HistoryPage> {
 
   // 上　admobエリア
 
-  List<Map<String, dynamic>> _history = [];
+  List<HistoryTable> _history = [];
   bool _isLoading = true;
   int _maxSavedNumber = 5;
 
-  void _refreshJournals() async {
-    _history = await HistoryViewModel.getHistorys();
+  void _refreshTable() async {
+    _history = await getAllHistorys(isar);
     setState(() {
-      _isLoading = false;
+      debugPrint('_refreshTable');
+
+      // _isLoading = false;
     });
   }
 
   @override
   void initState() {
     super.initState();
+    _refreshTable();
 
-    _refreshJournals();
     debugPrint('historyPageのinitState');
   }
 
   final snackBar = SnackBar(
       margin: EdgeInsets.fromLTRB(100, 0, 100, 300),
       behavior: SnackBarBehavior.floating,
-      duration: const Duration(milliseconds: 2000),
+      duration: const Duration(milliseconds: 1000),
       backgroundColor: Colors.black,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
@@ -76,27 +81,27 @@ class _HistoryPageState extends State<HistoryPage> {
         Text('All Delete!'),
       ]));
 
-  void _deleteItem(int id) async {
-    await HistoryViewModel.deleteItem(id);
-    _refreshJournals();
-  }
-
-  void _deleteAll() async {
-    await HistoryViewModel.deleteAll();
+  void get _deleteAll async {
+    // await HistoryViewModel.deleteAll();
     ScaffoldMessenger.of(context).removeCurrentSnackBar(
         // reason: SnackBarClosedReason.remove,
         );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    _refreshJournals();
+    _refreshTable();
   }
 
-  void _deleteTable() async {
-    await HistoryViewModel.deleteTable();
+  void _deleteHistory(id) async {
+    await deleteHistory(id, isar);
+    _refreshTable();
+  }
+
+  void _deleteAllhistory() async {
+    await deleteAllhistory();
+    _refreshTable();
     ScaffoldMessenger.of(context).removeCurrentSnackBar(
         // reason: SnackBarClosedReason.remove,
         );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    _refreshJournals();
   }
 
   @override
@@ -136,11 +141,20 @@ class _HistoryPageState extends State<HistoryPage> {
                       margin: const EdgeInsets.all(15),
                       child: ListTile(
                         // leading: Text(_history[index]['id'].toString()),
-                        title: SelectableText(_history[index]['password']),
-                        subtitle: Text(_history[index]['createdAt'].toString()),
+                        title: SelectableText(_history[index].password),
+                        // subtitle: Text(_history[index]['createdAt'].toString()),
+                        subtitle: Row(
+                          children: [
+                            Text(_history[index].id.toString()),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(_history[index].createdAt.toString()),
+                          ],
+                        ),
                         trailing: IconButton(
                           icon: const Icon(Icons.delete),
-                          onPressed: () => _deleteItem(_history[index]['id']),
+                          onPressed: () => _deleteHistory(_history[index].id),
                         ),
                       ),
                     ),
@@ -150,7 +164,7 @@ class _HistoryPageState extends State<HistoryPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton.large(
-        onPressed: _deleteTable,
+        onPressed: _deleteAllhistory,
         // onPressed: _deleteAll,
         backgroundColor: Colors.black,
         child: Center(

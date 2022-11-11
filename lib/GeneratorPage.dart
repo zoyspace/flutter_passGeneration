@@ -2,11 +2,12 @@
 
 import 'dart:math'; //random
 import 'package:flutter/services.dart'; // copy to clipboad
+import 'package:isar/isar.dart';
+import 'package:pass_gene/widgets/historyTable.dart';
 import 'dart:async';
 import 'package:provider/provider.dart'; //provider
 import 'package:flutter/material.dart';
 import 'widgets/NewfloatingButton.dart';
-import 'widgets/HistoryViewModel.dart';
 import 'SymbolPage.dart';
 import 'main.dart';
 
@@ -81,7 +82,6 @@ class GeneratorPageState extends State<GeneratorPage>
     //アプリ起動時に一度だけ実行される
     super.initState();
     _generatePassword();
-    // _generatePassword(context.read<SymbolsSetProvider>().symbolsSet);
     debugPrint("initState");
     // setState(() {});
   }
@@ -99,7 +99,7 @@ class GeneratorPageState extends State<GeneratorPage>
   final snackBar = SnackBar(
       margin: EdgeInsets.all(50),
       behavior: SnackBarBehavior.floating,
-      duration: const Duration(milliseconds: 700),
+      duration: const Duration(milliseconds: 1000),
       backgroundColor: Colors.pink.shade200,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
@@ -203,7 +203,7 @@ class GeneratorPageState extends State<GeneratorPage>
       _createdRandomPassword = randomStr;
     });
 
-    HistoryViewModel.createItem(randomStr, _length);
+    insertHistory(randomStr, _length, isar);
   }
 
   void copyToClipboad() {
@@ -211,7 +211,6 @@ class GeneratorPageState extends State<GeneratorPage>
     ScaffoldMessenger.of(context).removeCurrentSnackBar(
         // reason: SnackBarClosedReason.remove,
         );
-
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
