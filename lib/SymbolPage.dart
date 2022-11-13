@@ -1,63 +1,66 @@
 // ignore_for_file: file_names, avoid_function_literals_in_foreach_calls
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'widgets/symbolModel_riverpod.dart';
 
-Map symbolMap = <String, bool>{
-  '-': true, //ハイフン
-  '_': true, //アンダーバー
-  '/': true,
-  '*': true,
-  '+': true,
-  '.': true,
-  ',': true,
-  '!': true,
-  '#': true,
-  '\$': true,
-  '%': true,
-  '&': true,
-  '(': true,
-  ')': true,
-  '~': true,
-  '|': true,
-};
+// Map symbolMap = <String, bool>{
+//   '-': true, //ハイフン
+//   '_': true, //アンダーバー
+//   '/': true,
+//   '*': true,
+//   '+': true,
+//   '.': true,
+//   ',': true,
+//   '!': true,
+//   '#': true,
+//   '\$': true,
+//   '%': true,
+//   '&': true,
+//   '(': true,
+//   ')': true,
+//   '~': true,
+//   '|': true,
+// };
 
-class SymbolsSetProvider with ChangeNotifier {
-  bool _isNotifier = false;
+// class SymbolsSetProvider with ChangeNotifier {
+//   bool _isNotifier = false;
 
-  bool get isNotifier => _isNotifier;
+//   bool get isNotifier => _isNotifier;
 
-  set isNotifier(bool value) {
-    _isNotifier = value;
-    notifyListeners();
-  }
-}
+//   set isNotifier(bool value) {
+//     _isNotifier = value;
+//     notifyListeners();
+//   }
+// }
 
-class SymbolPage extends StatefulWidget {
-  const SymbolPage({Key? key}) : super(key: key);
+// class SymbolPage extends StatefulWidget {
+class SymbolPage extends ConsumerWidget {
+  SymbolPage({Key? key}) : super(key: key);
 
-  @override
-  State<SymbolPage> createState() => _SymbolPage();
-}
+//   @override
+//   State<SymbolPage> createState() => _SymbolPage();
+// }
 
-class _SymbolPage extends State<SymbolPage> {
-  @override
-  void initState() {
-    super.initState();
-  }
+// class _SymbolPage extends State<SymbolPage> {
+//   @override
+//   void initState() {
+//     super.initState();
+//   }
 
   final Uri _url = Uri.parse(
-      'https://apps.apple.com/jp/app/randompasswordgenerator/id1619751753'
-      // 'https://flutter.dev/'
-      );
+      'https://apps.apple.com/jp/app/randompasswordgenerator/id1619751753');
   void _launchUrl() async {
     if (!await launchUrl(_url, mode: LaunchMode.externalApplication))
       throw 'Could not launch $_url';
   }
 
-  Widget build(BuildContext context) {
-    final symbolPrvider = Provider.of<SymbolsSetProvider>(context);
+  // Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final StateController<List<SymbolModel>> symbolsStateController =
+        ref.read(symbolsProvider.notifier);
+    // final List<SymbolModel> _symbols = ref.watch(symbolsProvider);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
@@ -84,11 +87,13 @@ class _SymbolPage extends State<SymbolPage> {
               onPrimary: Colors.white,
             ),
             onPressed: () {
-              symbolMap.forEach((key, value) {
-                symbolMap[key] = true;
-              });
-              setState(() {});
-              symbolPrvider.isNotifier = true;
+              // ignore: unused_result
+              ref.refresh(symbolsProvider);
+              // symbolMap.forEach((key, value) {
+              //   symbolMap[key] = true;
+              // });
+              // setState(() {});
+              // symbolPrvider.isNotifier = true;
             },
           ),
           ElevatedButton(
@@ -98,35 +103,36 @@ class _SymbolPage extends State<SymbolPage> {
               onPrimary: Colors.white,
             ),
             onPressed: () {
-              symbolMap.forEach((key, value) {
-                symbolMap[key] = false;
+              symbolsStateController.state.forEach((_symbol) {
+                _symbol.isActive = false;
               });
-              setState(() {});
-              symbolPrvider.isNotifier = true;
             },
           ),
-          for (final key in symbolMap.keys)
+          for (final _symbol in symbolsStateController.state)
             GestureDetector(
                 onTap: () {
-                  setState(() {
-                    symbolMap[key] = !symbolMap[key];
-                  });
-                  symbolPrvider.isNotifier = true;
+                  _symbol.isActive = !_symbol.isActive;
+                  // setState(() {
+                  //   symbolMap[key] = !symbolMap[key];
+                  // });
+                  // symbolPrvider.isNotifier = true;
                 },
                 child: Container(
                   // padding: const EdgeInsets.all(5.0),
                   decoration: BoxDecoration(
-                    color:
-                        (symbolMap[key]) ? Colors.green.shade200 : Colors.white,
+                    color: (_symbol.isActive)
+                        ? Colors.green.shade200
+                        : Colors.white,
                     // border: Border.all(color: Colors.green),
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Center(
                     child: Text(
-                      key,
+                      _symbol.name,
                       style: TextStyle(
                           fontSize: 30,
-                          color: (symbolMap[key]) ? Colors.black : Colors.grey),
+                          color:
+                              (_symbol.isActive) ? Colors.black : Colors.grey),
                     ),
                   ),
                 )),

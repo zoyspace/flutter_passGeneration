@@ -10,7 +10,7 @@ import 'SymbolPage.dart';
 import 'widgets/AppTracking.dart';
 import 'widgets/historyTable.dart';
 
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
 
 final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
@@ -27,19 +27,19 @@ Future<void> main() async {
     directory: path,
   );
 
+  runApp(const ProviderScope(child: MyApp()));
   // SystemChrome.setPreferredOrientations(
   //         [DeviceOrientation.landscapeLeft, DeviceOrientation.portraitUp])
   //     .then((_) => {
-  runApp(
-    /// Providers are above [MyApp] instead of inside it, so that tests
-    /// can use [MyApp] while mocking the providers
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => SymbolsSetProvider()),
-      ],
-      child: const MyApp(),
-    ),
-  );
+  // runApp(
+  /// Providers are above [MyApp] instead of inside it, so that tests
+  /// can use [MyApp] while mocking the providers
+  // MultiProvider(
+  //   providers: [
+  //     ChangeNotifierProvider(create: (_) => SymbolsSetProvider()),
+  //   ],
+  // ),
+  // );
   // });
 }
 
@@ -88,7 +88,7 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) => initPlugin());
 
-    pageList.add(const SymbolPage());
+    pageList.add(SymbolPage());
     pageList.add(const GeneratorPage());
     pageList.add(const HistoryPage());
     _selectedIndex = 1;

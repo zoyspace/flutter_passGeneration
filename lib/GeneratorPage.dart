@@ -5,13 +5,15 @@ import 'package:flutter/services.dart'; // copy to clipboad
 import 'package:isar/isar.dart';
 import 'package:pass_gene/widgets/historyTable.dart';
 import 'dart:async';
-import 'package:provider/provider.dart'; //provider
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'widgets/NewfloatingButton.dart';
 import 'SymbolPage.dart';
 import 'main.dart';
+import 'widgets/symbolModel_riverpod.dart';
 
-class GeneratorPage extends StatefulWidget {
+class GeneratorPage extends ConsumerStatefulWidget {
+// class GeneratorPage extends StatefulWidget {
   const GeneratorPage({
     Key? key,
   }) : super(key: key);
@@ -19,12 +21,10 @@ class GeneratorPage extends StatefulWidget {
   // final String title;
 
   @override
-  State<GeneratorPage> createState() {
-    return GeneratorPageState();
-  }
+  GeneratorPageState createState() => GeneratorPageState();
 }
 
-class GeneratorPageState extends State<GeneratorPage>
+class GeneratorPageState extends ConsumerState<GeneratorPage>
     with RouteAware, AutomaticKeepAliveClientMixin {
   @override
   void didChangeDependencies() {
@@ -34,10 +34,10 @@ class GeneratorPageState extends State<GeneratorPage>
     routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
     debugPrint("didChangeDependencies");
 
-    createSymbolSet();
-    if (context.watch<SymbolsSetProvider>().isNotifier) {
-      // setState(() {});
-    }
+    // createSymbolSet();
+    // if (context.watch<SymbolsSetProvider>().isNotifier) {
+    // setState(() {});
+    // }
   }
 
   @override
@@ -82,7 +82,7 @@ class GeneratorPageState extends State<GeneratorPage>
     //アプリ起動時に一度だけ実行される
     super.initState();
     _generatePassword();
-    debugPrint("initState");
+    // debugPrint("initState");
     // setState(() {});
   }
 
@@ -116,19 +116,19 @@ class GeneratorPageState extends State<GeneratorPage>
   String symbolSet2 = '';
   bool isSymbolAllFalse = false;
 
-  void createSymbolSet() {
+  void createSymbolSet(List<SymbolModel> sympolList,
+      StateController<List<SymbolModel>> _symbolsControllerList) {
     symbolSet1 = '';
     symbolSet2 = '';
     isSymbolAllFalse = false;
     int workSymbolCount = 0;
-
-    for (String key in symbolMap.keys) {
-      if (symbolMap[key]) {
+    for (SymbolModel _symbol in sympolList) {
+      if (_symbol.isActive) {
         workSymbolCount++;
         if (workSymbolCount < 9) {
-          symbolSet1 = symbolSet1 + key;
+          symbolSet1 = symbolSet1 + _symbol.name;
         } else {
-          symbolSet2 = symbolSet2 + key;
+          symbolSet2 = symbolSet2 + _symbol.name;
         }
       }
     }
@@ -217,6 +217,9 @@ class GeneratorPageState extends State<GeneratorPage>
   @override
   Widget build(BuildContext context) {
     super.build(context); // 追加！
+    final _symbols = ref.watch(symbolsProvider);
+    final StateController<List<SymbolModel>> _symbolsStateController =
+        ref.read(symbolsProvider.notifier);
 
     final double deviceWidth = MediaQuery.of(context).size.width;
 
@@ -226,8 +229,8 @@ class GeneratorPageState extends State<GeneratorPage>
       //   title: const Text('GneratorPage'),
       // ),
       body: RefreshIndicator(
-        // strokeWidth: 10,
-        // displacement: 0.1,
+        strokeWidth: 10,
+        // displacement: 30,
         // edgeOffset: 100,
 
         onRefresh: () async {
@@ -296,10 +299,10 @@ class GeneratorPageState extends State<GeneratorPage>
                         onTap: () => setState(() {
                           isSymbol = !isSymbol;
                           if (isSymbolAllFalse == true && isSymbol == true) {
-                            symbolMap.forEach((key, value) {
-                              symbolMap[key] = true;
+                            _symbolsStateController.state.forEach((value) {
+                              value.isActive = true;
                             });
-                            createSymbolSet();
+                            createSymbolSet(_symbols, _symbolsStateController);
                           }
                           _generatePassword();
                         }),
