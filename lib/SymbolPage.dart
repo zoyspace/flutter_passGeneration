@@ -36,18 +36,18 @@ import 'widgets/symbolModel_riverpod.dart';
 // }
 
 // class SymbolPage extends StatefulWidget {
-class SymbolPage extends ConsumerWidget {
+class SymbolPage extends ConsumerStatefulWidget {
   SymbolPage({Key? key}) : super(key: key);
 
-//   @override
-//   State<SymbolPage> createState() => _SymbolPage();
-// }
+  @override
+  _SymbolPageState createState() => _SymbolPageState();
+}
 
-// class _SymbolPage extends State<SymbolPage> {
-//   @override
-//   void initState() {
-//     super.initState();
-//   }
+class _SymbolPageState extends ConsumerState<SymbolPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   final Uri _url = Uri.parse(
       'https://apps.apple.com/jp/app/randompasswordgenerator/id1619751753');
@@ -57,10 +57,9 @@ class SymbolPage extends ConsumerWidget {
   }
 
   // Widget build(BuildContext context) {
-  Widget build(BuildContext context, WidgetRef ref) {
-    final StateController<List<SymbolModel>> symbolsStateController =
-        ref.read(symbolsProvider.notifier);
-    // final List<SymbolModel> _symbols = ref.watch(symbolsProvider);
+  Widget build(BuildContext context) {
+    final symbolData = ref.watch(symbolProvider);
+    final symbolNotifier = ref.read(symbolProvider.notifier);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
@@ -87,11 +86,14 @@ class SymbolPage extends ConsumerWidget {
               onPrimary: Colors.white,
             ),
             onPressed: () {
+              symbolNotifier.allTrue();
+              setState(() {});
+
               // ignore: unused_result
-              ref.refresh(symbolsProvider);
-              // symbolMap.forEach((key, value) {
-              //   symbolMap[key] = true;
-              // });
+              // ref.refresh(symbolsProvider);
+              // for (int i = 0; i < symbolIsActiveListProvider.length; i++) {
+              //   ref.read(symbolIsActiveListProvider[i].notifier).state = true;
+              // }
               // setState(() {});
               // symbolPrvider.isNotifier = true;
             },
@@ -103,15 +105,16 @@ class SymbolPage extends ConsumerWidget {
               onPrimary: Colors.white,
             ),
             onPressed: () {
-              symbolsStateController.state.forEach((_symbol) {
-                _symbol.isActive = false;
-              });
+              symbolNotifier.allFalse();
+              setState(() {});
             },
           ),
-          for (final _symbol in symbolsStateController.state)
+          for (int i = 0; i < symbolLength; i++)
             GestureDetector(
                 onTap: () {
-                  _symbol.isActive = !_symbol.isActive;
+                  symbolNotifier.state[i] = !symbolData[i];
+                  setState(() {});
+                  // _symbol.isActive = !watchSymbols[1].isActive;
                   // setState(() {
                   //   symbolMap[key] = !symbolMap[key];
                   // });
@@ -120,19 +123,17 @@ class SymbolPage extends ConsumerWidget {
                 child: Container(
                   // padding: const EdgeInsets.all(5.0),
                   decoration: BoxDecoration(
-                    color: (_symbol.isActive)
-                        ? Colors.green.shade200
-                        : Colors.white,
+                    color:
+                        (symbolData[i]) ? Colors.green.shade200 : Colors.white,
                     // border: Border.all(color: Colors.green),
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Center(
                     child: Text(
-                      _symbol.name,
+                      symbolsDefaultList[i][1],
                       style: TextStyle(
                           fontSize: 30,
-                          color:
-                              (_symbol.isActive) ? Colors.black : Colors.grey),
+                          color: (symbolData[i]) ? Colors.black : Colors.grey),
                     ),
                   ),
                 )),

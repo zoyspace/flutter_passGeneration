@@ -24,42 +24,7 @@ class GeneratorPage extends ConsumerStatefulWidget {
   GeneratorPageState createState() => GeneratorPageState();
 }
 
-class GeneratorPageState extends ConsumerState<GeneratorPage>
-    with RouteAware, AutomaticKeepAliveClientMixin {
-  @override
-  void didChangeDependencies() {
-    // 遷移時に呼ばれる関数
-    // routeObserverに自身を設定
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
-    debugPrint("didChangeDependencies");
-
-    // createSymbolSet();
-    // if (context.watch<SymbolsSetProvider>().isNotifier) {
-    // setState(() {});
-    // }
-  }
-
-  @override
-  void didPopNext() {
-    debugPrint("popされて、この画面に戻ってきました！");
-  }
-
-  @override
-  void didPush() {
-    debugPrint("pushされてきました、この画面にやってきました！");
-  }
-
-  @override
-  void didPop() {
-    debugPrint("この画面がpopされました");
-  }
-
-  @override
-  void didPushNext() {
-    debugPrint("この画面からpushして違う画面に遷移しました！");
-  }
-
+class GeneratorPageState extends ConsumerState<GeneratorPage> {
   // with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive =>
       true; // To store state(AutomaticKeepAliveClientMixin) 追加！
@@ -92,7 +57,7 @@ class GeneratorPageState extends ConsumerState<GeneratorPage>
   @override
   void dispose() {
     // myController.dispose();
-    routeObserver.unsubscribe(this);
+    // routeObserver.unsubscribe(this);
     super.dispose();
   }
 
@@ -116,28 +81,20 @@ class GeneratorPageState extends ConsumerState<GeneratorPage>
   String symbolSet2 = '';
   bool isSymbolAllFalse = false;
 
-  void createSymbolSet(List<SymbolModel> sympolList,
-      StateController<List<SymbolModel>> _symbolsControllerList) {
-    symbolSet1 = '';
-    symbolSet2 = '';
-    isSymbolAllFalse = false;
-    int workSymbolCount = 0;
-    for (SymbolModel _symbol in sympolList) {
-      if (_symbol.isActive) {
-        workSymbolCount++;
-        if (workSymbolCount < 9) {
-          symbolSet1 = symbolSet1 + _symbol.name;
-        } else {
-          symbolSet2 = symbolSet2 + _symbol.name;
-        }
-      }
-    }
-    if (workSymbolCount == 0) {
-      isSymbolAllFalse = true;
-      isSymbol = false;
-    }
-    setState(() {});
-  }
+  // void createSymbolSet(List<bool> _symbolData) {
+  //   isSymbolAllFalse = false;
+  //   int workSymbolCount = 0;
+  //   for (int i = 0; i < symbolLength; i++) {
+  //     if (_symbolData[i]) {
+  //       workSymbolCount++;
+  //     }
+  //   }
+  //   if (workSymbolCount == 0) {
+  //     isSymbolAllFalse = true;
+  //     isSymbol = false;
+  //   }
+  //   setState(() {});
+  // }
 
   Container BuildPassArea() {
     return Container(
@@ -214,22 +171,38 @@ class GeneratorPageState extends ConsumerState<GeneratorPage>
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
+  void sympolOnset(List isActives) {
+    String activeSimbols = '';
+    for (int i = 0; i < symbolLength; i++) {
+      if (isActives[i]) {
+        activeSimbols = activeSimbols + symbolsDefaultList[i][1];
+      }
+    }
+    if (activeSimbols.length < 9) {
+      symbolSet1 = activeSimbols;
+      symbolSet2 = '';
+    } else {
+      symbolSet1 = activeSimbols.substring(1, 9);
+      symbolSet2 = activeSimbols.substring(9);
+    }
+    if (activeSimbols.length < 9) {
+      isSymbolAllFalse = true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    super.build(context); // 追加！
-    final _symbols = ref.watch(symbolsProvider);
-    final StateController<List<SymbolModel>> _symbolsStateController =
-        ref.read(symbolsProvider.notifier);
-
+    // super.build(context); // 追加！
+    final symbolData = ref.watch(symbolProvider);
+    final symbolNotifier = ref.read(symbolProvider.notifier);
+    // createSymbolSet(symbolData);
+    sympolOnset(symbolData);
     final double deviceWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
-      // appBar: AppBar(
-      //   title: const Text('GneratorPage'),
-      // ),
       body: RefreshIndicator(
-        strokeWidth: 10,
+        strokeWidth: 4,
         // displacement: 30,
         // edgeOffset: 100,
 
@@ -299,10 +272,11 @@ class GeneratorPageState extends ConsumerState<GeneratorPage>
                         onTap: () => setState(() {
                           isSymbol = !isSymbol;
                           if (isSymbolAllFalse == true && isSymbol == true) {
-                            _symbolsStateController.state.forEach((value) {
-                              value.isActive = true;
-                            });
-                            createSymbolSet(_symbols, _symbolsStateController);
+                            symbolNotifier.allTrue();
+                            // _symbolsStateController.state.forEach((value) {
+                            //   value.isActive = true;
+                            // });
+                            // createSymbolSet(symbolData);
                           }
                           _generatePassword();
                         }),

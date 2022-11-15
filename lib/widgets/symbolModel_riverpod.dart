@@ -1,30 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_launcher_icons/xml_templates.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final symbolsProvider = StateProvider((ref) => symbolsDefault);
+const List<List> symbolsDefaultList = [
+  [1, '-'], //ハイフン
+  [2, '_'], //アンダーバー
+  [3, '/'],
+  [4, '*'],
+  [5, '+'],
+  [6, '.'],
+  [7, ','],
+  [8, '!'],
+  [9, '#'],
+  [10, '\$'],
+  [11, '%'],
+  [12, '&'],
+  [13, '('],
+  [14, ')'],
+  [15, '~'],
+  [16, '|'],
+];
+final symbolLength = symbolsDefaultList.length;
+//stateprovidr
+final symbolIsActiveListProvider = List.generate(
+    symbolLength,
+    (_) => StateProvider<bool>(
+          (ref) => true,
+        ));
 
-class SymbolModel {
-  SymbolModel({required this.name, required this.isActive});
+final symbolIsActiveList = List<bool>.generate(symbolLength, (_) => true);
 
-  final String name;
-  late final bool isActive;
+// final StateController<List<SymbolModel>> symbolsStateController =
+//     ref.read(symbolsProvider.notifier);
+// final List<SymbolModel> watchSymbols = ref.watch(symbolsProvider);
+
+class SymbolNotifier extends StateNotifier<List<bool>> {
+  SymbolNotifier() : super(symbolIsActiveList);
+  void allTrue() {
+    for (int i = 0; i < symbolLength; i++) {
+      state[i] = true;
+    }
+  }
+
+  void allFalse() {
+    for (int i = 0; i < symbolLength; i++) {
+      state[i] = false;
+    }
+  }
+
+  void changeIsActive(boolNumber) {
+    state[boolNumber] = !state[boolNumber];
+  }
 }
 
-final List<SymbolModel> symbolsDefault = [
-  SymbolModel(name: '-', isActive: true), //ハイフン
-  SymbolModel(name: '_', isActive: true), //アンダーバー
-  SymbolModel(name: '/', isActive: true),
-  SymbolModel(name: '*', isActive: true),
-  SymbolModel(name: '+', isActive: true),
-  SymbolModel(name: '.', isActive: true),
-  SymbolModel(name: ',', isActive: true),
-  SymbolModel(name: '!', isActive: true),
-  SymbolModel(name: '#', isActive: true),
-  SymbolModel(name: '\$', isActive: true),
-  SymbolModel(name: '%', isActive: true),
-  SymbolModel(name: '&', isActive: true),
-  SymbolModel(name: '(', isActive: true),
-  SymbolModel(name: ')', isActive: true),
-  SymbolModel(name: '~', isActive: true),
-  SymbolModel(name: '|', isActive: true),
-];
+final symbolProvider = StateNotifierProvider<SymbolNotifier, List<bool>>((ref) {
+  return SymbolNotifier();
+});
+
+
+// ref.watch(symbolProvider)
