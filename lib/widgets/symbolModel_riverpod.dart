@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_launcher_icons/xml_templates.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 const List<List> symbolsDefaultList = [
@@ -21,7 +19,6 @@ const List<List> symbolsDefaultList = [
   [16, '|'],
 ];
 final symbolLength = symbolsDefaultList.length;
-//stateprovidr
 final symbolIsActiveListProvider = List.generate(
     symbolLength,
     (_) => StateProvider<bool>(
@@ -29,10 +26,6 @@ final symbolIsActiveListProvider = List.generate(
         ));
 
 final symbolIsActiveList = List<bool>.generate(symbolLength, (_) => true);
-
-// final StateController<List<SymbolModel>> symbolsStateController =
-//     ref.read(symbolsProvider.notifier);
-// final List<SymbolModel> watchSymbols = ref.watch(symbolsProvider);
 
 class SymbolNotifier extends StateNotifier<List<bool>> {
   SymbolNotifier() : super(symbolIsActiveList);
@@ -56,6 +49,3 @@ class SymbolNotifier extends StateNotifier<List<bool>> {
 final symbolProvider = StateNotifierProvider<SymbolNotifier, List<bool>>((ref) {
   return SymbolNotifier();
 });
-
-
-// ref.watch(symbolProvider)
