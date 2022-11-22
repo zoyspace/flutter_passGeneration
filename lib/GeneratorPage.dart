@@ -1,14 +1,10 @@
-// ignore_for_file: must_call_super
-
 import 'dart:math'; //random
 import 'package:flutter/services.dart'; // copy to clipboad
-import 'package:isar/isar.dart';
 import 'package:pass_gene/widgets/historyTable.dart';
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'widgets/NewfloatingButton.dart';
-import 'SymbolPage.dart';
 import 'main.dart';
 import 'widgets/symbolModel_riverpod.dart';
 
@@ -26,19 +22,18 @@ class GeneratorPage extends ConsumerStatefulWidget {
 
 class GeneratorPageState extends ConsumerState<GeneratorPage> {
   // with AutomaticKeepAliveClientMixin {
-  bool get wantKeepAlive =>
-      true; // To store state(AutomaticKeepAliveClientMixin) 追加！
-  String _createdRandomPassword = '3';
+  // bool get wantKeepAlive =>
+  //     true; // To store state(AutomaticKeepAliveClientMixin) 追加！
+  String _createdRandomPassword = 'password';
 
   double _currentSliderValue = 20;
   final int _maxSize = 50;
   int _length = 20;
   double _passFontsize = 30;
   bool _isSmall = true;
-
-  bool _isBig = true;
+  bool _isUpper = true;
   bool _isInteger = true;
-  bool isSymbol = false;
+  bool _isSymbol = false;
 
   String _charset = '';
 
@@ -46,18 +41,17 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
   void initState() {
     //アプリ起動時に一度だけ実行される
     super.initState();
-    _generatePassword();
-    // debugPrint("initState");
-    // setState(() {});
+    _firstSet();
+    FocusManager.instance.primaryFocus
+        ?.unfocus(); //他のページで、フォーカスが残ると、画面更新できないので、フォーカスを外す。
   }
 
-// 1. ここでTextEditingControllerを持たせる
-  // final myController = TextEditingController(); // textfield
-// 2. 必ずdispose()をoverrideして、作ったTextEditingControllerを廃棄する。
+  Future<void> _firstSet() async {
+    _createdRandomPassword = await getLatestHistory();
+  }
+
   @override
   void dispose() {
-    // myController.dispose();
-    // routeObserver.unsubscribe(this);
     super.dispose();
   }
 
@@ -79,22 +73,7 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
 
   String symbolSet1 = '';
   String symbolSet2 = '';
-  bool isSymbolAllFalse = false;
-
-  // void createSymbolSet(List<bool> _symbolData) {
-  //   isSymbolAllFalse = false;
-  //   int workSymbolCount = 0;
-  //   for (int i = 0; i < symbolLength; i++) {
-  //     if (_symbolData[i]) {
-  //       workSymbolCount++;
-  //     }
-  //   }
-  //   if (workSymbolCount == 0) {
-  //     isSymbolAllFalse = true;
-  //     isSymbol = false;
-  //   }
-  //   setState(() {});
-  // }
+  bool _isSymbolAllFalse = false;
 
   Container BuildPassArea() {
     return Container(
@@ -124,19 +103,19 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
     if (_isSmall) {
       _charset = _charset + smallLetterSet;
     }
-    if (_isBig) {
+    if (_isUpper) {
       _charset = _charset + bigLetterSet;
     }
     if (_isInteger) {
       _charset = _charset + integerSet;
     }
-    if (isSymbol) {
+    if (_isSymbol) {
       _charset = _charset + symbolSet1 + symbolSet2;
     }
     if (_isSmall == false &&
-        _isBig == false &&
+        _isUpper == false &&
         _isInteger == false &&
-        isSymbol == false) {
+        _isSymbol == false) {
       _charset = '*';
     }
 
@@ -160,7 +139,7 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
       _createdRandomPassword = randomStr;
     });
 
-    insertHistory(randomStr, _length, isar);
+    insertHistory(randomStr, _length);
   }
 
   void copyToClipboad() {
@@ -173,6 +152,8 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
 
   void sympolOnset(List isActives) {
     String activeSimbols = '';
+    _isSymbolAllFalse = false;
+
     for (int i = 0; i < symbolLength; i++) {
       if (isActives[i]) {
         activeSimbols = activeSimbols + symbolsDefaultList[i][1];
@@ -185,17 +166,15 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
       symbolSet1 = activeSimbols.substring(1, 9);
       symbolSet2 = activeSimbols.substring(9);
     }
-    if (activeSimbols.length < 9) {
-      isSymbolAllFalse = true;
+    if (activeSimbols.length == 0) {
+      _isSymbolAllFalse = true;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // super.build(context); // 追加！
     final symbolData = ref.watch(symbolProvider);
     final symbolNotifier = ref.read(symbolProvider.notifier);
-    // createSymbolSet(symbolData);
     sympolOnset(symbolData);
     final double deviceWidth = MediaQuery.of(context).size.width;
 
@@ -239,16 +218,16 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
                       flex: 10,
                       child: NewfloatingButton(
                         onTap: () => setState(() {
-                          _isBig = !_isBig;
+                          _isUpper = !_isUpper;
                           _generatePassword();
                         }),
-                        isButtonPressed: _isBig,
+                        isButtonPressed: _isUpper,
                         partExample: 'ABC...Z',
                         partPass: 'Upper',
                       )),
                   Expanded(flex: 1, child: Container()),
                 ]),
-                Container(
+                SizedBox(
                   height: 20,
                 ),
                 Row(children: [
@@ -264,27 +243,22 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
                         partExample: '012...9',
                         partPass: 'Numbers',
                       )),
-                  // _isInteger, '012...9', ' Numbers'))),
                   Expanded(flex: 1, child: Container()),
                   Expanded(
                       flex: 10,
                       child: NewfloatingButton(
                         onTap: () => setState(() {
-                          isSymbol = !isSymbol;
-                          if (isSymbolAllFalse == true && isSymbol == true) {
+                          _isSymbol = !_isSymbol;
+                          if (_isSymbolAllFalse == true && _isSymbol == true) {
                             symbolNotifier.allTrue();
-                            // _symbolsStateController.state.forEach((value) {
-                            //   value.isActive = true;
-                            // });
-                            // createSymbolSet(symbolData);
+                            sympolOnset(symbolData);
                           }
                           _generatePassword();
                         }),
-                        isButtonPressed: isSymbol,
-                        partExample: (isSymbolAllFalse) ? 'No' : symbolSet1,
-                        partPass: (isSymbolAllFalse) ? 'Symbols' : symbolSet2,
+                        isButtonPressed: _isSymbol,
+                        partExample: (_isSymbolAllFalse) ? 'No' : symbolSet1,
+                        partPass: (_isSymbolAllFalse) ? 'Symbols' : symbolSet2,
                       )),
-
                   Expanded(flex: 1, child: Container()),
                 ]),
                 SizedBox(

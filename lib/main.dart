@@ -13,34 +13,21 @@ import 'widgets/historyTable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
 
-final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
 late Isar isar;
+// late Isar isar = openDB();
+// final isar = Isar.open([HistoryTableSchema]);
+// void main() {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
-  final dir = await getApplicationSupportDirectory();
-  String path = dir.path;
+  final dir = await getApplicationSupportDirectory(); //isar
+  String path = dir.path; //isar
   isar = await Isar.open(
-    [
-      HistoryTableSchema, //import isarのdartファイルをimportする。
-    ],
+    [HistoryTableSchema],
     directory: path,
-  );
+  ); //isar
 
   runApp(const ProviderScope(child: MyApp()));
-  // SystemChrome.setPreferredOrientations(
-  //         [DeviceOrientation.landscapeLeft, DeviceOrientation.portraitUp])
-  //     .then((_) => {
-  // runApp(
-  /// Providers are above [MyApp] instead of inside it, so that tests
-  /// can use [MyApp] while mocking the providers
-  // MultiProvider(
-  //   providers: [
-  //     ChangeNotifierProvider(create: (_) => SymbolsSetProvider()),
-  //   ],
-  // ),
-  // );
-  // });
 }
 
 class MyApp extends StatelessWidget {
@@ -54,7 +41,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: _title,
       theme: ThemeData(primarySwatch: Colors.green),
-      navigatorObservers: [routeObserver],
+      // navigatorObservers: [routeObserver],
       home: const Scaffold(
         // appBar: AppBar(title: const Text(_title)),
         body: MyStatefulWidget(),
@@ -77,20 +64,13 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
   int _selectedIndex = 1;
   final PageController _pageController = PageController(initialPage: 1);
 
-  // void _onTappedBar(int value) { // pageview
-  //   setState(() {
-  //     _selectedIndex = value;
-  //   });
-  //   _pageController.jumpToPage(value);
-  // }
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) => initPlugin());
 
-    pageList.add(SymbolPage());
-    pageList.add(const GeneratorPage());
-    pageList.add(const HistoryPage());
+    // pageList.add(SymbolPage());
+    // pageList.add(const GeneratorPage());
+    // pageList.add(const HistoryPage());
     _selectedIndex = 1;
     super.initState();
   }
@@ -101,52 +81,17 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
     super.dispose();
   }
 
-  // GlobalKey globalKey_GeneratorPageState = GlobalKey<GeneratorPageState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
-
-      body:
-          // appBar: AppBar(
-          //   title: const Text('Select symbol'),
-          // ),
-
-          PageView(
-              children: pageList,
-              controller: _pageController,
-              onPageChanged: (index) {
-                setState(() => _selectedIndex = index);
-              }),
-
-      //     IndexedStack(
-      //   index: _selectedIndex,
-      //   children: pageList,
-      // ),
-
-      //   // globalKey_GeneratorPageState.currentState?.createSymbolSet();
-      // },
-
-      // bottomNavigationBar: BottomNavigationBar(
-      //   onTap: _onTappedBar,
-      //   currentIndex: _selectedIndex,
-      //   type: BottomNavigationBarType.fixed,
-      //   items: const [
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.settings),
-      //       label: 'SYMBOLS',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.home),
-      //       label: 'HOME',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.volunteer_activism),
-      //       label: 'DONATION',
-      //     ),
-      //   ],
-      // ),
-
+      body: PageView(
+        children: [SymbolPage(), GeneratorPage(), HistoryPage()],
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() => _selectedIndex = index);
+        },
+      ),
       bottomNavigationBar: ClipRRect(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         child: WaterDropNavBar(
@@ -171,8 +116,8 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
             ),
             BarItem(filledIcon: Icons.home, outlinedIcon: Icons.home_outlined),
             BarItem(
-              filledIcon: Icons.history,
-              outlinedIcon: Icons.history_outlined,
+              filledIcon: Icons.note_alt,
+              outlinedIcon: Icons.note_alt_outlined,
             ),
           ],
         ),

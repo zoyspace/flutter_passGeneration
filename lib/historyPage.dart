@@ -1,55 +1,34 @@
 import 'dart:io'; // Platform.isAndroid
 import 'package:flutter/foundation.dart'; //kReleaseMode
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 import 'package:pass_gene/main.dart';
+import 'package:pass_gene/widgets/admobBanner1.dart';
 import 'package:path_provider/path_provider.dart';
 import 'widgets/historyTable.dart';
 
 // import 'package:pass_gene/widgets/admobBanner.dart';
 
-class HistoryPage extends StatefulWidget {
+class HistoryPage extends ConsumerStatefulWidget {
   const HistoryPage({Key? key}) : super(key: key);
 
   @override
-  State<HistoryPage> createState() => _HistoryPageState();
+  _HistoryPageState createState() => _HistoryPageState();
 }
 
-class _HistoryPageState extends State<HistoryPage> {
-  // 下　admobエリア
-  // https://developers.google.com/admob/flutter/banner
-
-  final BannerAd myBanner = BannerAd(
-    adUnitId: _unitId,
-    size: AdSize.banner,
-    request: AdRequest(),
-    listener: BannerAdListener(
-      // Called when an ad is successfully received.
-      onAdLoaded: (Ad ad) => print('Ad loaded.'),
-      // Called when an ad request failed.
-      onAdFailedToLoad: (Ad ad, LoadAdError error) {
-        // Dispose the ad here to free resources.
-        ad.dispose();
-        print('Ad failed to load: $error');
-      },
-      // Called when an ad opens an overlay that covers the screen.
-      onAdOpened: (Ad ad) => print('Ad opened.'),
-      // Called when an ad removes an overlay that covers the screen.
-      onAdClosed: (Ad ad) => print('Ad closed.'),
-      // Called when an impression occurs on the ad.
-      onAdImpression: (Ad ad) => print('Ad impression.'),
-    ),
-  );
-
-  // 上　admobエリア
+class _HistoryPageState extends ConsumerState<HistoryPage> {
+  // admob
+  final BannerAd myBanner = makeBannerAd();
 
   List<HistoryTable> _history = [];
-  bool _isLoading = true;
-  int _maxSavedNumber = 5;
+  // bool _isLoading = true;
+  // int _maxSavedNumber = 5;
 
   void _refreshTable() async {
-    _history = await getAllHistorys(isar);
+    _history = await getAllHistorys();
     setState(() {
       debugPrint('_refreshTable');
 
@@ -78,7 +57,7 @@ class _HistoryPageState extends State<HistoryPage> {
           Icons.delete_forever,
           color: Colors.white,
         ),
-        Text('All Delete!'),
+        Text('Delete All !'),
       ]));
 
   void get _deleteAll async {
@@ -91,7 +70,7 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   void _deleteHistory(id) async {
-    await deleteHistory(id, isar);
+    await deleteHistory(id);
     _refreshTable();
   }
 
@@ -106,7 +85,9 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    // AdmobLoad(myBanner);
     myBanner.load();
+
     final AdWidget adWidget = AdWidget(ad: myBanner);
     final Container adContainer = Container(
       alignment: Alignment.center,
@@ -114,6 +95,7 @@ class _HistoryPageState extends State<HistoryPage> {
       width: myBanner.size.width.toDouble(),
       height: myBanner.size.height.toDouble(),
     );
+    print('build内');
 
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
@@ -145,11 +127,13 @@ class _HistoryPageState extends State<HistoryPage> {
                         // subtitle: Text(_history[index]['createdAt'].toString()),
                         subtitle: Row(
                           children: [
-                            Text(_history[index].id.toString()),
+                            // Text(_history[index].id.toString()),
+                            Text((index + 1).toString()),
                             SizedBox(
                               width: 10,
                             ),
-                            Text(_history[index].createdAt.toString()),
+                            Text(DateFormat('yyyy-MM-dd hh-mm-ss')
+                                .format(_history[index].createdAt)),
                           ],
                         ),
                         trailing: IconButton(
@@ -160,7 +144,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     ),
                   ),
                 ),
-          Text(' The maximum number of saves is 200.'),
+          Text(' The maximum number of saves is $maxSavedHistory.'),
         ],
       ),
       floatingActionButton: FloatingActionButton.large(
@@ -176,15 +160,3 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 }
-
-// admob
-final String _unitId = kReleaseMode //bool kReleaseMode
-    ? Platform.isAndroid
-        //release　unitid
-        ? 'ca-app-pub-6147471144580591/7187192436' //release android
-        : 'ca-app-pub-6147471144580591/9464450539' //release ios
-    : Platform.isAndroid
-        // test unitID
-        ? 'ca-app-pub-3940256099942544/6300978111' //test android
-        : 'ca-app-pub-3940256099942544/2934735716'; //test ios
-

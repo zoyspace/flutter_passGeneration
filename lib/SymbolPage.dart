@@ -5,37 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'widgets/symbolModel_riverpod.dart';
 
-// Map symbolMap = <String, bool>{
-//   '-': true, //ハイフン
-//   '_': true, //アンダーバー
-//   '/': true,
-//   '*': true,
-//   '+': true,
-//   '.': true,
-//   ',': true,
-//   '!': true,
-//   '#': true,
-//   '\$': true,
-//   '%': true,
-//   '&': true,
-//   '(': true,
-//   ')': true,
-//   '~': true,
-//   '|': true,
-// };
-
-// class SymbolsSetProvider with ChangeNotifier {
-//   bool _isNotifier = false;
-
-//   bool get isNotifier => _isNotifier;
-
-//   set isNotifier(bool value) {
-//     _isNotifier = value;
-//     notifyListeners();
-//   }
-// }
-
-// class SymbolPage extends StatefulWidget {
 class SymbolPage extends ConsumerStatefulWidget {
   SymbolPage({Key? key}) : super(key: key);
 
@@ -88,14 +57,6 @@ class _SymbolPageState extends ConsumerState<SymbolPage> {
             onPressed: () {
               symbolNotifier.allTrue();
               setState(() {});
-
-              // ignore: unused_result
-              // ref.refresh(symbolsProvider);
-              // for (int i = 0; i < symbolIsActiveListProvider.length; i++) {
-              //   ref.read(symbolIsActiveListProvider[i].notifier).state = true;
-              // }
-              // setState(() {});
-              // symbolPrvider.isNotifier = true;
             },
           ),
           ElevatedButton(

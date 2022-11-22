@@ -19,11 +19,16 @@ const List<List> symbolsDefaultList = [
   [16, '|'],
 ];
 final symbolLength = symbolsDefaultList.length;
-final symbolIsActiveListProvider = List.generate(
-    symbolLength,
-    (_) => StateProvider<bool>(
-          (ref) => true,
-        ));
+
+// final symbolIsActiveListProvider = List.generate(
+//     symbolLength,
+//     (_) => StateProvider<bool>(
+//           (ref) => true,
+//         ));
+// class SymbolModelSet {
+//   final List activeList = List<bool>.generate(symbolLength, (_) => true);
+//   final showSymbolButtom1 = 1;
+// }
 
 final symbolIsActiveList = List<bool>.generate(symbolLength, (_) => true);
 
@@ -39,10 +44,6 @@ class SymbolNotifier extends StateNotifier<List<bool>> {
     for (int i = 0; i < symbolLength; i++) {
       state[i] = false;
     }
-  }
-
-  void changeIsActive(boolNumber) {
-    state[boolNumber] = !state[boolNumber];
   }
 }
 
