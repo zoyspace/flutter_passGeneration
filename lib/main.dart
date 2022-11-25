@@ -68,11 +68,12 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) => initPlugin());
 
-    // pageList.add(SymbolPage());
-    // pageList.add(const GeneratorPage());
-    // pageList.add(const HistoryPage());
+    pageList.add(SymbolPage());
+    pageList.add(const GeneratorPage());
+    pageList.add(const HistoryPage());
     _selectedIndex = 1;
     super.initState();
+    print('main init');
   }
 
   @override
@@ -87,6 +88,7 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
       backgroundColor: Colors.grey.shade300,
       body: PageView(
         children: [SymbolPage(), GeneratorPage(), HistoryPage()],
+        // children: pageList,
         controller: _pageController,
         onPageChanged: (index) {
           setState(() => _selectedIndex = index);

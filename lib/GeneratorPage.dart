@@ -24,6 +24,12 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
   // with AutomaticKeepAliveClientMixin {
   // bool get wantKeepAlive =>
   //     true; // To store state(AutomaticKeepAliveClientMixin) 追加！
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // このメソッドをオーバーライド
+  }
+
   String _createdRandomPassword = 'password';
 
   double _currentSliderValue = 20;
@@ -43,7 +49,7 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
     super.initState();
     _firstSet();
     FocusManager.instance.primaryFocus
-        ?.unfocus(); //他のページで、フォーカスが残ると、画面更新できないので、フォーカスを外す。
+        ?.unfocus(); //他のページで、フォーカスが残ると、他画面更新できないので、フォーカスを外す。
   }
 
   Future<void> _firstSet() async {
@@ -301,7 +307,7 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
                     // onPressed: _generatePassword,
                     // onPressed: copyToClipboad,
                     onPressed: () => {_generatePassword()},
-                    heroTag: 'hero1',
+                    // heroTag: 'hero1',
                     tooltip: 'generator',
                     label: const Text('Create'),
                     icon: Transform.scale(

@@ -20,7 +20,7 @@ const List<List> symbolsDefaultList = [
 ];
 final symbolLength = symbolsDefaultList.length;
 
-// final symbolIsActiveListProvider = List.generate(
+// final symbolInitialListProvider = List.generate(
 //     symbolLength,
 //     (_) => StateProvider<bool>(
 //           (ref) => true,
@@ -30,10 +30,10 @@ final symbolLength = symbolsDefaultList.length;
 //   final showSymbolButtom1 = 1;
 // }
 
-final symbolIsActiveList = List<bool>.generate(symbolLength, (_) => true);
+final symbolInitialList = List<bool>.generate(symbolLength, (_) => true);
 
 class SymbolNotifier extends StateNotifier<List<bool>> {
-  SymbolNotifier() : super(symbolIsActiveList);
+  SymbolNotifier() : super(symbolInitialList);
   void allTrue() {
     for (int i = 0; i < symbolLength; i++) {
       state[i] = true;
