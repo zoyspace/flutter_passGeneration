@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart'; //kReleaseMode
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:pass_gene/widgets/id_admob.dart';
+import 'id_admob.dart';
 
 /// This example demonstrates anchored adaptive banner ads.
 class AdmobBanner extends StatefulWidget {
@@ -83,8 +85,8 @@ class _AdmobBannerState extends State<AdmobBanner> {
 final String _unitId = kReleaseMode //bool kReleaseMode
     ? Platform.isAndroid
         //release　unitid
-        ? 'ca-app-pub-6147471144580591/7187192436' //release android
-        : 'ca-app-pub-6147471144580591/9464450539' //release ios
+        ? unitId_release_admob_Android //release android
+        : unitId_release_admob_iOS //release ios
     : Platform.isAndroid
         // test unitID
         ? 'ca-app-pub-3940256099942544/6300978111' //test android

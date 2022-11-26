@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'widgets/symbolModel_riverpod.dart';
+import 'widgets/data_riverpod.dart';
 
 class SymbolPage extends ConsumerStatefulWidget {
   SymbolPage({Key? key}) : super(key: key);

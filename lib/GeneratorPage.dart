@@ -1,4 +1,3 @@
-import 'dart:math'; //random
 import 'package:flutter/services.dart'; // copy to clipboad
 import 'package:pass_gene/widgets/historyTable.dart';
 import 'dart:async';
@@ -6,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'widgets/NewfloatingButton.dart';
 import 'main.dart';
-import 'widgets/symbolModel_riverpod.dart';
+import 'widgets/data_riverpod.dart';
 
 class GeneratorPage extends ConsumerStatefulWidget {
 // class GeneratorPage extends StatefulWidget {
@@ -24,37 +23,20 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
   // with AutomaticKeepAliveClientMixin {
   // bool get wantKeepAlive =>
   //     true; // To store state(AutomaticKeepAliveClientMixin) 追加！
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    // このメソッドをオーバーライド
-  }
-
-  String _createdRandomPassword = 'password';
-
-  double _currentSliderValue = 20;
   final int _maxSize = 50;
-  int _length = 20;
-  double _passFontsize = 30;
-  bool _isSmall = true;
-  bool _isUpper = true;
-  bool _isInteger = true;
-  bool _isSymbol = false;
-
-  String _charset = '';
 
   @override
   void initState() {
     //アプリ起動時に一度だけ実行される
     super.initState();
-    _firstSet();
+    // _firstSet();
     FocusManager.instance.primaryFocus
         ?.unfocus(); //他のページで、フォーカスが残ると、他画面更新できないので、フォーカスを外す。
   }
 
-  Future<void> _firstSet() async {
-    _createdRandomPassword = await getLatestHistory();
-  }
+  // Future<void> _firstSet() async {
+  //   _createdRandomPassword = await getLatestHistory();
+  // }
 
   @override
   void dispose() {
@@ -81,7 +63,7 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
   String symbolSet2 = '';
   bool _isSymbolAllFalse = false;
 
-  Container BuildPassArea() {
+  Container BuildPassArea(word) {
     return Container(
       alignment: Alignment.centerLeft,
       margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -94,62 +76,14 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: SelectableText(
-        _createdRandomPassword,
-        style: TextStyle(fontSize: _passFontsize),
+        word,
+        style: TextStyle(fontSize: ref.watch(passFontsizeProvider)),
       ),
     );
   }
 
-  Future<void> _generatePassword() async {
-    const smallLetterSet = 'abcdefghijklmnopqrstuvwxyz';
-    const bigLetterSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const integerSet = '0123456789';
-
-    _charset = '';
-    if (_isSmall) {
-      _charset = _charset + smallLetterSet;
-    }
-    if (_isUpper) {
-      _charset = _charset + bigLetterSet;
-    }
-    if (_isInteger) {
-      _charset = _charset + integerSet;
-    }
-    if (_isSymbol) {
-      _charset = _charset + symbolSet1 + symbolSet2;
-    }
-    if (_isSmall == false &&
-        _isUpper == false &&
-        _isInteger == false &&
-        _isSymbol == false) {
-      _charset = '*';
-    }
-
-    if (_length < 41) {
-      _passFontsize = 35.0;
-    } else {
-      _passFontsize = 27.0;
-    }
-    final random = Random.secure();
-    final randomStr =
-        List.generate(_length, (_) => _charset[random.nextInt(_charset.length)])
-            .join();
-    // List.generate リストを作成
-    // List.generate(数値) 数値は、リストの長さ
-    // charset.length 配列の長さ
-    // random.nextInt(最大の数値)　ランダムに数値を返す。
-    // charset[数値] 配列の値 例)1だとcharsetの２文字目
-    // join() 配列を結合して、文字列にする。
-
-    setState(() {
-      _createdRandomPassword = randomStr;
-    });
-
-    insertHistory(randomStr, _length);
-  }
-
-  void copyToClipboad() {
-    Clipboard.setData(ClipboardData(text: _createdRandomPassword));
+  copyToClipboad(word) {
+    Clipboard.setData(ClipboardData(text: word));
     ScaffoldMessenger.of(context).removeCurrentSnackBar(
         // reason: SnackBarClosedReason.remove,
         );
@@ -183,6 +117,19 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
     final symbolNotifier = ref.read(symbolProvider.notifier);
     sympolOnset(symbolData);
     final double deviceWidth = MediaQuery.of(context).size.width;
+    final isSmallState = ref.read(isSmallProvider.notifier);
+    final isUpperState = ref.read(isUpperProvider.notifier);
+    final isIntegerState = ref.read(isIntegerProvider.notifier);
+    final isSymbolState = ref.read(isSymbolProvider.notifier);
+    final passLengthState = ref.read(passLengthProvider.notifier);
+    final rundomWordState = ref.read(rundomWordProvider.notifier);
+
+    final isSmall = ref.watch(isSmallProvider);
+    final isUpper = ref.watch(isUpperProvider);
+    final isInteger = ref.watch(isIntegerProvider);
+    final isSymbol = ref.watch(isSymbolProvider);
+    final passLength = ref.watch(passLengthProvider);
+    final rundomWord = ref.watch(rundomWordProvider);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
@@ -190,9 +137,8 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
         strokeWidth: 4,
         // displacement: 30,
         // edgeOffset: 100,
-
         onRefresh: () async {
-          await _generatePassword();
+          await generatePassword(ref);
         },
         child: ListView(
           children: [
@@ -203,18 +149,18 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
               // child: Column(
               // mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                BuildPassArea(),
+                BuildPassArea(rundomWord),
                 const SizedBox(height: 20),
                 Row(children: [
                   Expanded(flex: 1, child: Container()),
                   Expanded(
                       flex: 10,
                       child: NewfloatingButton(
-                        onTap: () => setState(() {
-                          _isSmall = !_isSmall;
-                          _generatePassword();
-                        }),
-                        isButtonPressed: _isSmall,
+                        onTap: () => {
+                          isSmallState.state = !isSmall,
+                          generatePassword(ref)
+                        },
+                        isButtonPressed: isSmall,
                         partExample: 'abc...z',
                         partPass: 'Lower',
                       )),
@@ -223,11 +169,11 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
                   Expanded(
                       flex: 10,
                       child: NewfloatingButton(
-                        onTap: () => setState(() {
-                          _isUpper = !_isUpper;
-                          _generatePassword();
-                        }),
-                        isButtonPressed: _isUpper,
+                        onTap: () => {
+                          isUpperState.state = !isUpper,
+                          generatePassword(ref),
+                        },
+                        isButtonPressed: isUpper,
                         partExample: 'ABC...Z',
                         partPass: 'Upper',
                       )),
@@ -241,11 +187,11 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
                   Expanded(
                       flex: 10,
                       child: NewfloatingButton(
-                        onTap: () => setState(() {
-                          _isInteger = !_isInteger;
-                          _generatePassword();
-                        }),
-                        isButtonPressed: _isInteger,
+                        onTap: () => {
+                          isIntegerState.state = !isInteger,
+                          generatePassword(ref)
+                        },
+                        isButtonPressed: isInteger,
                         partExample: '012...9',
                         partPass: 'Numbers',
                       )),
@@ -253,15 +199,16 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
                   Expanded(
                       flex: 10,
                       child: NewfloatingButton(
-                        onTap: () => setState(() {
-                          _isSymbol = !_isSymbol;
-                          if (_isSymbolAllFalse == true && _isSymbol == true) {
-                            symbolNotifier.allTrue();
-                            sympolOnset(symbolData);
-                          }
-                          _generatePassword();
-                        }),
-                        isButtonPressed: _isSymbol,
+                        onTap: () => {
+                          isSymbolState.state = !isSymbol,
+                          if (_isSymbolAllFalse == true && isSymbol == true)
+                            {
+                              symbolNotifier.allTrue(),
+                              sympolOnset(symbolData),
+                            },
+                          generatePassword(ref),
+                        },
+                        isButtonPressed: isSymbol,
                         partExample: (_isSymbolAllFalse) ? 'No' : symbolSet1,
                         partPass: (_isSymbolAllFalse) ? 'Symbols' : symbolSet2,
                       )),
@@ -275,25 +222,21 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
                   Expanded(
                     flex: 7,
                     child: Slider(
-                      value: _currentSliderValue,
+                      value: passLength,
                       max: _maxSize.toDouble(),
                       min: 1,
                       divisions: _maxSize - 1,
-                      label: _currentSliderValue.round().toString(),
-                      onChanged: (double value) {
-                        setState(() {
-                          _currentSliderValue = value;
-                          _length = value.toInt();
-
-                          _generatePassword();
-                        });
+                      label: passLengthState.state.round().toString(),
+                      onChanged: (value) {
+                        passLengthState.state = value;
+                        generatePassword(ref);
                       },
                     ),
                   ),
                   Expanded(
                     flex: 1,
                     child: Text(
-                      _currentSliderValue.round().toString(),
+                      passLength.round().toString(),
                       style: const TextStyle(fontSize: 25),
                     ),
                   ),
@@ -304,9 +247,7 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
                   margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                   width: deviceWidth,
                   child: FloatingActionButton.extended(
-                    // onPressed: _generatePassword,
-                    // onPressed: copyToClipboad,
-                    onPressed: () => {_generatePassword()},
+                    onPressed: () => generatePassword(ref),
                     // heroTag: 'hero1',
                     tooltip: 'generator',
                     label: const Text('Create'),
@@ -321,7 +262,7 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton.large(
-        onPressed: copyToClipboad,
+        onPressed: () => copyToClipboad(rundomWordState.state),
         child: Center(
           child: Column(
               mainAxisSize: MainAxisSize.min,

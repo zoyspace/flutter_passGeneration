@@ -120,7 +120,7 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
                     itemCount: _history.length,
                     itemBuilder: (context, index) => Card(
                       color: Colors.green.shade200,
-                      margin: const EdgeInsets.all(15),
+                      margin: const EdgeInsets.all(10),
                       child: ListTile(
                         // leading: Text(_history[index]['id'].toString()),
                         title: SelectableText(_history[index].password),
