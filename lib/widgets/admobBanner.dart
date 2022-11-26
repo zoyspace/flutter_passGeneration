@@ -1,87 +1,57 @@
-import 'dart:io';
-import 'package:flutter/foundation.dart'; //kReleaseMode
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:pass_gene/widgets/id_admob.dart';
+import 'dart:io'; // Platform.isAndroid
+import 'package:flutter/foundation.dart'; //kReleaseMode
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'id_admob.dart';
 
-/// This example demonstrates anchored adaptive banner ads.
-class AdmobBanner extends StatefulWidget {
-  @override
-  _AdmobBannerState createState() => _AdmobBannerState();
+// admobエリア
+// https://developers.google.com/admob/flutter/banner
+BannerAd makeBannerAd() {
+  return BannerAd(
+    adUnitId: _unitId,
+    size: AdSize.banner,
+    request: AdRequest(),
+    listener: BannerAdListener(
+      // Called when an ad is successfully received.
+      onAdLoaded: (Ad ad) => print('Ad loaded.'),
+      // Called when an ad request failed.
+      onAdFailedToLoad: (Ad ad, LoadAdError error) {
+        // Dispose the ad here to free resources.
+        ad.dispose();
+        print('Ad failed to load: $error');
+      },
+      // Called when an ad opens an overlay that covers the screen.
+      onAdOpened: (Ad ad) => print('Ad opened.'),
+      // Called when an ad removes an overlay that covers the screen.
+      onAdClosed: (Ad ad) => print('Ad closed.'),
+      // Called when an impression occurs on the ad.
+      onAdImpression: (Ad ad) => print('Ad impression.'),
+    ),
+  );
 }
 
-class _AdmobBannerState extends State<AdmobBanner> {
-  BannerAd? _anchoredAdaptiveAd;
-  bool _isLoaded = false;
+// class AdmobLoad {
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _loadAd();
-    // debugPrint(_unitId);
-  }
+//   AdmobLoad(BannerAd banner) {
 
-  Future<void> _loadAd() async {
-    // Get an BannerAdSize before loading the ad.
-    final AnchoredAdaptiveBannerAdSize? size =
-        await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-            MediaQuery.of(context).size.width.truncate());
+//     BannerAd _mybanner = banner;
+//     _mybanner.load();
+//     final AdWidget _adWidget = AdWidget(ad: _mybanner);
+//     final Container _adContainer = Container(
+//       alignment: Alignment.center,
+//       child: _adWidget,
+//       width: _mybanner.size.width.toDouble(),
+//       height: _mybanner.size.height.toDouble(),
+//     );
+//   }
+//   // Container get adContainer => _adContainer;
+//   // Container _adContainer;
+// }
 
-    if (size == null) {
-      debugPrint('Unable to get height of anchored banner.');
-      return;
-    }
-
-    _anchoredAdaptiveAd = BannerAd(
-      adUnitId: _unitId,
-      size: size,
-      request: AdRequest(),
-      listener: BannerAdListener(
-        onAdLoaded: (Ad ad) {
-          print('loaded: ${ad}');
-          setState(() {
-            // When the ad is loaded, get the ad size and use it to set
-            // the height of the ad container.
-            _anchoredAdaptiveAd = ad as BannerAd;
-            _isLoaded = true;
-          });
-        },
-        onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('Anchored adaptive banner failedToLoad: $error');
-          ad.dispose();
-        },
-      ),
-    );
-    return _anchoredAdaptiveAd!.load();
-  }
-
-  @override
-  // Widget build(BuildContext context) => Scaffold(
-  // backgroundColor: Colors.grey.shade300,
-  // appBar: AppBar(
-  //   title: Text('please'),
-  // ),
-  // body:
-  // admob
-  Widget build(BuildContext context) {
-    return (_anchoredAdaptiveAd != null && _isLoaded)
-        ? Container(
-            color: Colors.green,
-            width: _anchoredAdaptiveAd!.size.width.toDouble(),
-            height: _anchoredAdaptiveAd!.size.height.toDouble(),
-            child: AdWidget(ad: _anchoredAdaptiveAd!),
-          )
-        : CircularProgressIndicator();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _anchoredAdaptiveAd?.dispose();
-  }
-}
-
+// id設定
 final String _unitId = kReleaseMode //bool kReleaseMode
     ? Platform.isAndroid
         //release　unitid
@@ -91,3 +61,5 @@ final String _unitId = kReleaseMode //bool kReleaseMode
         // test unitID
         ? 'ca-app-pub-3940256099942544/6300978111' //test android
         : 'ca-app-pub-3940256099942544/2934735716'; //test ios
+
+

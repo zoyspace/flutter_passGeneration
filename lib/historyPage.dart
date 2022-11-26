@@ -6,7 +6,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 import 'package:pass_gene/main.dart';
-import 'package:pass_gene/widgets/admobBanner1.dart';
+import 'package:pass_gene/widgets/admobBanner.dart';
 import 'package:path_provider/path_provider.dart';
 import 'widgets/historyTable.dart';
 
