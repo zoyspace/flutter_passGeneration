@@ -21,11 +21,9 @@ const List<List> symbolsDefaultList = [
   [15, '~'],
   [16, '|'],
 ];
-
 const smallLetterSet = 'abcdefghijklmnopqrstuvwxyz';
 const bigLetterSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const integerSet = '0123456789';
-
 final symbolLength = symbolsDefaultList.length;
 final symbolInitialList = List<bool>.generate(symbolLength, (_) => true);
 
@@ -33,14 +31,40 @@ final isSmallProvider = StateProvider<bool>((ref) => true);
 final isUpperProvider = StateProvider<bool>((ref) => true);
 final isIntegerProvider = StateProvider<bool>((ref) => true);
 final isSymbolProvider = StateProvider<bool>((ref) => false);
-final passLengthProvider = StateProvider<double>((ref) => 10.0);
+final passLengthProvider = StateProvider<double>((ref) => 20.0);
 final passFontsizeProvider = StateProvider<double>((ref) => 30.0);
 final rundomWordProvider = StateProvider<String>((ref) => 'password');
+
+final DataForMakePassProvider = Provider((ref) {
+  return DataForMakePass;
+});
+
+class DataForMakePass {
+  bool isSmall = true;
+  bool _isUpper = true;
+  bool _isInteger = true;
+  bool _isSymbol = false;
+  //  bool _isAllSymbol = false;
+  reverse_isSmall() {
+    isSmall = !isSmall;
+  }
+
+  reverse_isUpper() {
+    _isUpper = !_isUpper;
+  }
+
+  reverse_isInteger() {
+    _isInteger = !_isInteger;
+  }
+
+  reverse_isSymbol() {
+    _isSymbol = !_isSymbol;
+  }
+}
 
 Future generatePassword(ref) async {
   String _charset = '';
   String _symbolTrueset = '';
-  double _passFontsize = 0;
 
   final isSmall = ref.read(isSmallProvider.notifier).state;
   final isUpper = ref.read(isUpperProvider.notifier).state;

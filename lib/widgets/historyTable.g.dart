@@ -58,7 +58,7 @@ const HistoryTableSchema = CollectionSchema(
   getId: _historyTableGetId,
   getLinks: _historyTableGetLinks,
   attach: _historyTableAttach,
-  version: '3.0.2',
+  version: '3.0.5',
 );
 
 int _historyTableEstimateSize(

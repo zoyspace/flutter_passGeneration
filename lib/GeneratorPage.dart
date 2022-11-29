@@ -1,47 +1,16 @@
 import 'package:flutter/services.dart'; // copy to clipboad
 import 'package:pass_gene/widgets/historyTable.dart';
-import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'widgets/NewfloatingButton.dart';
 import 'main.dart';
 import 'widgets/data_riverpod.dart';
 
-class GeneratorPage extends ConsumerStatefulWidget {
-// class GeneratorPage extends StatefulWidget {
-  const GeneratorPage({
-    Key? key,
-  }) : super(key: key);
+// ignore: must_be_immutable
+class GeneratorPage extends ConsumerWidget {
+  GeneratorPage({Key? key}) : super(key: key);
 
-  // final String title;
-
-  @override
-  GeneratorPageState createState() => GeneratorPageState();
-}
-
-class GeneratorPageState extends ConsumerState<GeneratorPage> {
-  // with AutomaticKeepAliveClientMixin {
-  // bool get wantKeepAlive =>
-  //     true; // To store state(AutomaticKeepAliveClientMixin) 追加！
   final int _maxSize = 50;
-
-  @override
-  void initState() {
-    //アプリ起動時に一度だけ実行される
-    super.initState();
-    // _firstSet();
-    FocusManager.instance.primaryFocus
-        ?.unfocus(); //他のページで、フォーカスが残ると、他画面更新できないので、フォーカスを外す。
-  }
-
-  // Future<void> _firstSet() async {
-  //   _createdRandomPassword = await getLatestHistory();
-  // }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   final snackBar = SnackBar(
       margin: EdgeInsets.all(50),
@@ -63,7 +32,7 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
   String symbolSet2 = '';
   bool _isSymbolAllFalse = false;
 
-  Container BuildPassArea(word) {
+  Container BuildPassArea(ref, word) {
     return Container(
       alignment: Alignment.centerLeft,
       margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -82,7 +51,7 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
     );
   }
 
-  copyToClipboad(word) {
+  copyToClipboad(context, word) {
     Clipboard.setData(ClipboardData(text: word));
     ScaffoldMessenger.of(context).removeCurrentSnackBar(
         // reason: SnackBarClosedReason.remove,
@@ -112,7 +81,10 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    FocusManager.instance.primaryFocus
+        ?.unfocus(); //他のページで、フォーカスが残ると、他画面更新できないので、フォーカスを外す。
+
     final symbolData = ref.watch(symbolProvider);
     final symbolNotifier = ref.read(symbolProvider.notifier);
     sympolOnset(symbolData);
@@ -123,6 +95,7 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
     final isSymbolState = ref.read(isSymbolProvider.notifier);
     final passLengthState = ref.read(passLengthProvider.notifier);
     final rundomWordState = ref.read(rundomWordProvider.notifier);
+    final DataForMakePassState = ref.read(DataForMakePassProvider);
 
     final isSmall = ref.watch(isSmallProvider);
     final isUpper = ref.watch(isUpperProvider);
@@ -130,6 +103,8 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
     final isSymbol = ref.watch(isSymbolProvider);
     final passLength = ref.watch(passLengthProvider);
     final rundomWord = ref.watch(rundomWordProvider);
+    final DataForMakePass = ref.watch(DataForMakePassProvider);
+    print(DataForMakePass);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
@@ -149,7 +124,7 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
               // child: Column(
               // mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                BuildPassArea(rundomWord),
+                BuildPassArea(ref, rundomWord),
                 const SizedBox(height: 20),
                 Row(children: [
                   Expanded(flex: 1, child: Container()),
@@ -262,7 +237,7 @@ class GeneratorPageState extends ConsumerState<GeneratorPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton.large(
-        onPressed: () => copyToClipboad(rundomWordState.state),
+        onPressed: () => copyToClipboad(context, rundomWordState.state),
         child: Center(
           child: Column(
               mainAxisSize: MainAxisSize.min,

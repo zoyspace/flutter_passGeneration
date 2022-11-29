@@ -68,7 +68,7 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
     WidgetsBinding.instance.addPostFrameCallback((_) => initPlugin());
 
     pageList.add(SymbolPage());
-    pageList.add(const GeneratorPage());
+    pageList.add(GeneratorPage());
     pageList.add(const HistoryPage());
     _selectedIndex = 1;
     super.initState();
