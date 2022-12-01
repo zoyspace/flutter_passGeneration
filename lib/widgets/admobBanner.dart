@@ -1,10 +1,6 @@
-import 'dart:async';
-
-import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:io'; // Platform.isAndroid
 import 'package:flutter/foundation.dart'; //kReleaseMode
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'id_admob.dart';
 
 // admobエリア

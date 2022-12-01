@@ -2,8 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pass_gene/mvvm/data/data_pass.dart';
+import 'package:pass_gene/mvvm/dataControler.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'widgets/data_riverpod.dart';
 
 class SymbolPage extends ConsumerStatefulWidget {
   SymbolPage({Key? key}) : super(key: key);
@@ -27,8 +28,8 @@ class _SymbolPageState extends ConsumerState<SymbolPage> {
 
   // Widget build(BuildContext context) {
   Widget build(BuildContext context) {
-    final symbolData = ref.watch(symbolProvider);
-    final symbolNotifier = ref.read(symbolProvider.notifier);
+    final symbolBoolList = ref.watch(dataNotifierProvider).symbolBoolListF;
+    final symbolNotifier = ref.read(dataNotifierProvider.notifier);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
@@ -55,7 +56,7 @@ class _SymbolPageState extends ConsumerState<SymbolPage> {
               onPrimary: Colors.white,
             ),
             onPressed: () {
-              symbolNotifier.allTrue();
+              symbolNotifier.symbolAllOK();
               setState(() {});
             },
           ),
@@ -66,35 +67,31 @@ class _SymbolPageState extends ConsumerState<SymbolPage> {
               onPrimary: Colors.white,
             ),
             onPressed: () {
-              symbolNotifier.allFalse();
+              symbolNotifier.symbolAllOFF();
               setState(() {});
             },
           ),
           for (int i = 0; i < symbolLength; i++)
             GestureDetector(
                 onTap: () {
-                  symbolNotifier.state[i] = !symbolData[i];
-                  setState(() {});
-                  // _symbol.isActive = !watchSymbols[1].isActive;
-                  // setState(() {
-                  //   symbolMap[key] = !symbolMap[key];
-                  // });
-                  // symbolPrvider.isNotifier = true;
+                  symbolNotifier.reverseSymbolWord(i);
                 },
                 child: Container(
                   // padding: const EdgeInsets.all(5.0),
                   decoration: BoxDecoration(
-                    color:
-                        (symbolData[i]) ? Colors.green.shade200 : Colors.white,
+                    color: (symbolBoolList[i])
+                        ? Colors.green.shade200
+                        : Colors.white,
                     // border: Border.all(color: Colors.green),
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Center(
                     child: Text(
-                      symbolsDefaultList[i][1],
+                      symbolsWordList[i][1],
                       style: TextStyle(
                           fontSize: 30,
-                          color: (symbolData[i]) ? Colors.black : Colors.grey),
+                          color:
+                              (symbolBoolList[i]) ? Colors.black : Colors.grey),
                     ),
                   ),
                 )),
