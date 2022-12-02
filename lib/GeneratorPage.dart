@@ -33,7 +33,7 @@ class GeneratorPage extends ConsumerWidget {
   String symbolSet2 = '';
   bool _isSymbolAllFalse = false;
 
-  Container BuildPassArea(rumdomWord, fSize) {
+  Container BuildPassArea(WidgetRef ref) {
     return Container(
       alignment: Alignment.centerLeft,
       margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -46,8 +46,9 @@ class GeneratorPage extends ConsumerWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: SelectableText(
-        rumdomWord,
-        style: TextStyle(fontSize: fSize),
+        ref.watch(dataNotifierProvider).rundomWordF,
+        style:
+            TextStyle(fontSize: ref.watch(dataNotifierProvider).passFontsizeF),
       ),
     );
   }
@@ -85,6 +86,9 @@ class GeneratorPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     FocusManager.instance.primaryFocus
         ?.unfocus(); //他のページで、フォーカスが残ると、他画面更新できないので、フォーカスを外す。
+
+    final double deviceWidth = MediaQuery.of(context).size.width;
+
     final symbolData = ref.watch(dataNotifierProvider);
     final symbolNotifer = ref.read(dataNotifierProvider.notifier);
     // sympolOnset(symbolData);
@@ -96,7 +100,7 @@ class GeneratorPage extends ConsumerWidget {
         // displacement: 30,
         // edgeOffset: 100,
         onRefresh: () async {
-          await symbolNotifer.generatePassword;
+          await symbolNotifer.generatePassword();
         },
         child: ListView(
           children: [
@@ -107,7 +111,7 @@ class GeneratorPage extends ConsumerWidget {
               // child: Column(
               // mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                BuildPassArea(symbolData.rundomWordF, symbolData.passFontsizeF),
+                BuildPassArea(ref),
                 const SizedBox(height: 20),
                 Row(children: [
                   Expanded(flex: 1, child: Container()),
@@ -115,8 +119,8 @@ class GeneratorPage extends ConsumerWidget {
                       flex: 10,
                       child: NewfloatingButton(
                         onTap: () => {
-                          symbolNotifer.reverseSmall,
-                          symbolNotifer.generatePassword
+                          symbolNotifer.reverseSmall(),
+                          symbolNotifer.generatePassword()
                         },
                         isButtonPressed: symbolData.isSmallF,
                         partExample: 'abc...z',
@@ -129,7 +133,7 @@ class GeneratorPage extends ConsumerWidget {
                       child: NewfloatingButton(
                         onTap: () => {
                           symbolNotifer.reverseUpper(),
-                          symbolNotifer.generatePassword,
+                          symbolNotifer.generatePassword(),
                         },
                         isButtonPressed: symbolData.isUpperF,
                         partExample: 'ABC...Z',
@@ -147,7 +151,7 @@ class GeneratorPage extends ConsumerWidget {
                       child: NewfloatingButton(
                         onTap: () => {
                           symbolNotifer.reverseInteger(),
-                          symbolNotifer.generatePassword
+                          symbolNotifer.generatePassword()
                         },
                         isButtonPressed: symbolData.isIntegerF,
                         partExample: '012...9',
@@ -164,11 +168,14 @@ class GeneratorPage extends ConsumerWidget {
                           //     symbolNotifier.allTrue(),
                           //     sympolOnset(symbolData),
                           //   },
-                          symbolNotifer.generatePassword,
+                          symbolNotifer.generatePassword(),
                         },
                         isButtonPressed: symbolData.isSymbolF,
-                        partExample: (_isSymbolAllFalse) ? 'No' : symbolSet1,
-                        partPass: (_isSymbolAllFalse) ? 'Symbols' : symbolSet2,
+                        partExample:
+                            (_isSymbolAllFalse) ? 'No' : symbolData.symbolTrue1,
+                        partPass: (_isSymbolAllFalse)
+                            ? 'Symbols'
+                            : symbolData.symbolTrue2,
                       )),
                   Expanded(flex: 1, child: Container()),
                 ]),
@@ -187,7 +194,7 @@ class GeneratorPage extends ConsumerWidget {
                       label: symbolData.passLengthF.round().toString(),
                       onChanged: (value) {
                         symbolNotifer.changeLengthFromSlider(value);
-                        symbolNotifer.generatePassword;
+                        symbolNotifer.generatePassword();
                       },
                     ),
                   ),
@@ -205,7 +212,7 @@ class GeneratorPage extends ConsumerWidget {
                   margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                   width: deviceWidth,
                   child: FloatingActionButton.extended(
-                    onPressed: () => symbolNotifer.generatePassword,
+                    onPressed: () => symbolNotifer.generatePassword(),
                     // heroTag: 'hero1',
                     tooltip: 'generator',
                     label: const Text('Create'),

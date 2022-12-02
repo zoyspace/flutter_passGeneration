@@ -18,7 +18,7 @@ class dataNotifier extends StateNotifier<passData> {
             isSymbolF: false,
             isAllFlaseF: false,
             passLengthF: 20.0,
-            passFontsizeF: 10.0,
+            passFontsizeF: 30.0,
             rundomWordF: 'password',
             symbolTrue1: symbolsWordList.join().substring(1, 9),
             symbolTrue2: symbolsWordList.join().substring(9),
@@ -28,35 +28,25 @@ class dataNotifier extends StateNotifier<passData> {
     state = state.copyWith(passLengthF: value);
   }
 
+  void reverseSmall() {
+    state = state.copyWith(isSmallF: !state.isSmallF);
+  }
+
   void reverseUpper() {
-    bool workBool = state.isUpperF;
-    state = state.copyWith(isUpperF: !workBool);
+    state = state.copyWith(isUpperF: !state.isUpperF);
   }
 
   void reverseInteger() {
-    bool workBool = state.isIntegerF;
-    state = state.copyWith(isIntegerF: !workBool);
-  }
-
-  void reverseSmall() {
-    bool workBool = state.isSmallF;
-    state = state.copyWith(isSmallF: !workBool);
+    state = state.copyWith(isIntegerF: !state.isIntegerF);
   }
 
   void reverseSymbol() {
-    bool workBool = state.isSymbolF;
-    state = state.copyWith(isSymbolF: !workBool);
+    state = state.copyWith(isSymbolF: !state.isSymbolF);
   }
 
   Future generatePassword() async {
     String _charset = '';
-    String _symbolTrueset = '';
 
-    // for (int i = 0; i < symbolLength; i++) {
-    //   if (ref.read(symbolProvider.notifier).state[i]) {
-    //     _symbolTrueset = _symbolTrueset + symbolsDefaultList[i][1];
-    //   }
-    // }
     if (state.isSmallF) {
       _charset = _charset + smallLetterSet;
     }
@@ -67,14 +57,10 @@ class dataNotifier extends StateNotifier<passData> {
       _charset = _charset + integerSet;
     }
     if (state.isSymbolF) {
-      _charset = _charset + _symbolTrueset;
+      _charset = _charset + state.symbolTrue1 + state.symbolTrue2;
     }
-    if (state.isSmallF == false &&
-        state.isUpperF == false &&
-        state.isIntegerF == false &&
-        state.isSymbolF == false) {
+    if (_charset.length == 0) {
       _charset = '*';
-      state = state.copyWith(isAllFlaseF: true);
     }
 
     if (state.passLengthF < 41) {
@@ -123,14 +109,23 @@ class dataNotifier extends StateNotifier<passData> {
   }
 
   void symbolTrueSet() {
-    String trueSymbols =
-        state.symbolBoolListF.where((element) => element == true).join();
-    if (trueSymbols.length < 9) {
-      state = state.copyWith(symbolTrue1: trueSymbols, symbolTrue2: '');
+    String trueSymbols = '';
+    for (int i = 0; i < symbolLength; i++) {
+      if (state.symbolBoolListF[i]) {
+        trueSymbols = trueSymbols + symbolsWordList[i];
+      }
+    }
+    if (trueSymbols.length == 0) {
+      state = state.copyWith(
+          symbolTrue1: trueSymbols, symbolTrue2: '', isAllFlaseF: true);
+    } else if (trueSymbols.length < 9) {
+      state = state.copyWith(
+          symbolTrue1: trueSymbols, symbolTrue2: '', isAllFlaseF: false);
     } else {
       state = state.copyWith(
           symbolTrue1: trueSymbols.substring(1, 9),
-          symbolTrue2: trueSymbols.substring(9));
+          symbolTrue2: trueSymbols.substring(9),
+          isAllFlaseF: false);
     }
   }
 }

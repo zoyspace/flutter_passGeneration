@@ -52,9 +52,9 @@ class _SymbolPageState extends ConsumerState<SymbolPage> {
           ElevatedButton(
             child: const Text('Select All'),
             style: ElevatedButton.styleFrom(
-              primary: Colors.green,
-              onPrimary: Colors.white,
-            ),
+                // backgroundColor: Colors.green,
+                // foregroundColor: Colors.white,
+                ),
             onPressed: () {
               symbolNotifier.symbolAllOK();
               setState(() {});
@@ -63,8 +63,8 @@ class _SymbolPageState extends ConsumerState<SymbolPage> {
           ElevatedButton(
             child: const Text('Release All'),
             style: ElevatedButton.styleFrom(
-              primary: Colors.green,
-              onPrimary: Colors.white,
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
             ),
             onPressed: () {
               symbolNotifier.symbolAllOFF();
@@ -87,7 +87,7 @@ class _SymbolPageState extends ConsumerState<SymbolPage> {
                   ),
                   child: Center(
                     child: Text(
-                      symbolsWordList[i][1],
+                      symbolsWordList[i],
                       style: TextStyle(
                           fontSize: 30,
                           color:
