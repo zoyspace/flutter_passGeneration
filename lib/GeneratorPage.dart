@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart'; // copy to clipboad
-import 'package:pass_gene/mvvm/data/data_pass.dart';
 import 'package:pass_gene/mvvm/dataControler.dart';
 import 'package:pass_gene/widgets/historyTable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
