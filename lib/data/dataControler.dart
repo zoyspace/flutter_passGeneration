@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pass_gene/data/data_pass.dart';
-import 'package:pass_gene/widgets/historyTable.dart';
+import 'package:pass_gene/DB_Isar/historyTable.dart';
 
 final dataNotifierProvider =
     StateNotifierProvider<dataNotifier, passData>((ref) {

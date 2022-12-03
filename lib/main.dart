@@ -6,7 +6,7 @@ import 'package:pass_gene/historyPage.dart';
 import 'GeneratorPage.dart';
 import 'SymbolPage.dart';
 import 'widgets/AppTracking.dart';
-import 'widgets/historyTable.dart';
+import 'DB_Isar/historyTable.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
@@ -66,7 +66,6 @@ class _MyStatefulWidget extends State<MyStatefulWidget> {
     pageList.add(const HistoryPage());
     _selectedIndex = 1;
     super.initState();
-    print('main init');
   }
 
   @override

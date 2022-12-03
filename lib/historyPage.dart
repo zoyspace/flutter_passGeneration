@@ -1,13 +1,9 @@
-import 'dart:io'; // Platform.isAndroid
-import 'package:flutter/foundation.dart'; //kReleaseMode
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
-import 'package:isar/isar.dart';
-import 'package:pass_gene/main.dart';
 import 'package:pass_gene/widgets/admobBanner.dart';
-import 'widgets/historyTable.dart';
+import 'DB_Isar/historyTable.dart';
 
 // import 'package:pass_gene/widgets/admobBanner.dart';
 
