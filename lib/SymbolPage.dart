@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pass_gene/mvvm/data/data_pass.dart';
-import 'package:pass_gene/mvvm/dataControler.dart';
+import 'package:pass_gene/data/data_pass.dart';
+import 'package:pass_gene/data/dataControler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SymbolPage extends ConsumerStatefulWidget {

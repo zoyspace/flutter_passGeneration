@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart'; // copy to clipboad
-import 'package:pass_gene/mvvm/dataControler.dart';
+import 'package:pass_gene/data/dataControler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'widgets/NewfloatingButton.dart';

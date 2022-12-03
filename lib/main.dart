@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:isar/isar.dart';
 import 'package:pass_gene/historyPage.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'GeneratorPage.dart';
 import 'SymbolPage.dart';
@@ -13,17 +12,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
 
 late Isar isar;
-// late Isar isar = openDB();
-// final isar = Isar.open([HistoryTableSchema]);
-// void main() {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
-  final dir = await getApplicationSupportDirectory(); //isar
-  String path = dir.path; //isar
+
   isar = await Isar.open(
     [HistoryTableSchema],
-    directory: path,
   ); //isar
 
   runApp(const ProviderScope(child: MyApp()));
