@@ -1,10 +1,8 @@
 import 'package:flutter/services.dart'; // copy to clipboad
 import 'package:pass_gene/mvvm/dataControler.dart';
-import 'package:pass_gene/widgets/historyTable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'widgets/NewfloatingButton.dart';
-import 'main.dart';
 
 // ignore: must_be_immutable
 class GeneratorPage extends ConsumerWidget {
@@ -60,27 +58,6 @@ class GeneratorPage extends ConsumerWidget {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  // void sympolOnset(List isActives) {
-  //   String activeSimbols = '';
-  //   _isSymbolAllFalse = false;
-
-  //   for (int i = 0; i < symbolLength; i++) {
-  //     if (isActives[i]) {
-  //       activeSimbols = activeSimbols + symbolsDefaultList[i][1];
-  //     }
-  //   }
-  //   if (activeSimbols.length < 9) {
-  //     symbolSet1 = activeSimbols;
-  //     symbolSet2 = '';
-  //   } else {
-  //     symbolSet1 = activeSimbols.substring(1, 9);
-  //     symbolSet2 = activeSimbols.substring(9);
-  //   }
-  //   if (activeSimbols.length == 0) {
-  //     _isSymbolAllFalse = true;
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     FocusManager.instance.primaryFocus
@@ -90,7 +67,6 @@ class GeneratorPage extends ConsumerWidget {
 
     final symbolData = ref.watch(dataNotifierProvider);
     final symbolNotifer = ref.read(dataNotifierProvider.notifier);
-    // sympolOnset(symbolData);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
