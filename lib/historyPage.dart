@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:pass_gene/widgets/admobBanner.dart';
-import 'DB_Isar/historyTable.dart';
+import 'isarDB/historyTable.dart';
 
 // import 'package:pass_gene/widgets/admobBanner.dart';
 

@@ -3,10 +3,10 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:isar/isar.dart';
 import 'package:pass_gene/historyPage.dart';
 
-import 'GeneratorPage.dart';
-import 'SymbolPage.dart';
-import 'widgets/AppTracking.dart';
-import 'DB_Isar/historyTable.dart';
+import 'generatorPage.dart';
+import 'symbolPage.dart';
+import 'widgets/appTracking.dart';
+import 'isarDB/historyTable.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
