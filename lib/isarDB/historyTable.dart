@@ -78,14 +78,3 @@ Future deleteByyondHistory() async {
     });
   }
 }
-
-
-// late Future<Isar> isar;
-// final isar2 = openDB();
-
-// Future<Isar> openDB() async {
-//   if (Isar.instanceNames.isEmpty) {
-//     return await Isar.open([HistoryTableSchema]);
-//   }
-//   throw UnimplementedError();
-// }

@@ -26,8 +26,6 @@ class GeneratorPage extends ConsumerWidget {
         Text('Copied!'),
       ]));
 
-  String symbolSet1 = '';
-  String symbolSet2 = '';
   bool _isSymbolAllFalse = false;
 
   Container BuildPassArea(WidgetRef ref) {
@@ -43,9 +41,10 @@ class GeneratorPage extends ConsumerWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: SelectableText(
-        ref.watch(dataNotifierProvider).rundomWordF,
-        style:
-            TextStyle(fontSize: ref.watch(dataNotifierProvider).passFontsizeF),
+        ref.watch(dataNotifierProvider.select((value) => value.rundomWordF)),
+        style: TextStyle(
+            fontSize: ref.watch(
+                dataNotifierProvider.select((value) => value.passFontsizeF))),
       ),
     );
   }
@@ -146,9 +145,10 @@ class GeneratorPage extends ConsumerWidget {
                           symbolNotifer.generatePassword(),
                         },
                         isButtonPressed: symbolData.isSymbolF,
-                        partExample:
-                            (_isSymbolAllFalse) ? 'No' : symbolData.symbolTrue1,
-                        partPass: (_isSymbolAllFalse)
+                        partExample: (symbolNotifer.state.isAllFlaseF)
+                            ? 'No'
+                            : symbolData.symbolTrue1,
+                        partPass: (symbolNotifer.state.isAllFlaseF)
                             ? 'Symbols'
                             : symbolData.symbolTrue2,
                       )),
