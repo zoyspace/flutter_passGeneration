@@ -42,6 +42,12 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
     bottonAnimationLogicScale = BottonAnimationLogic(this);
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    bottonAnimationLogicScale.dispose();
+  }
+
   final snackBar = SnackBar(
       margin: EdgeInsets.fromLTRB(100, 0, 100, 300),
       behavior: SnackBarBehavior.floating,
@@ -81,7 +87,7 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-//   final GlobalKey<AnimatedListState> _key = GlobalKey();
+  final GlobalKey<AnimatedListState> _listAniKey = GlobalKey();
 
 //   List _items = [];
 //   void _addItem() {
@@ -167,41 +173,23 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
                   )
                 // : Flexible(
                 : Expanded(
-                    child: ListView.builder(
-                      itemCount: _history.length,
-                      itemBuilder: (context, index) => Card(
-                        color: Colors.green.shade200,
-                        margin: const EdgeInsets.all(10),
-                        child: ListTile(
-                          // leading: Text(_history[index]['id'].toString()),
-                          title: SelectableText(_history[index].password),
-                          // subtitle: Text(_history[index]['createdAt'].toString()),
-                          subtitle: Row(
-                            children: [
-                              // Text(_history[index].id.toString()),
-                              Text((index + 1).toString()),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(DateFormat('yyyy-MM-dd hh-mm-ss')
-                                  .format(_history[index].createdAt)),
-                            ],
-                          ),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () => _deleteHistory(_history[index].id),
-                          ),
-                        ),
-                      ),
+                    // child: ListView.builder(
+                    child: AnimatedList(
+                      key: _listAniKey,
+                      initialItemCount: _history.length,
+                      itemBuilder: (BuildContext context, int index,
+                          Animation<double> animation) {
+                        return _buildItem(index, animation);
+                      },
                     ),
                   ),
             Text(' The maximum number of saves is $maxSavedHistory.'),
           ],
         ),
         floatingActionButton: FloatingActionButton.large(
-          onPressed: () => {
-            bottonAnimationLogicScale.start(),
-            _deleteAllhistory,
+          onPressed: () {
+            bottonAnimationLogicScale.start();
+            _deleteAllhistory();
           },
           // onPressed: _deleteAll,
           backgroundColor: Colors.black,
@@ -215,5 +203,41 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
             ),
           ),
         ));
+  }
+
+  Widget _buildItem(int index, Animation<double> animation) {
+    return SizeTransition(
+      sizeFactor: animation,
+      child: Card(
+        color: Colors.green.shade200,
+        margin: const EdgeInsets.all(10),
+        child: ListTile(
+          // leading: Text(_history[index]['id'].toString()),
+          title: SelectableText(_history[index].password),
+          // subtitle: Text(_history[index]['createdAt'].toString()),
+          subtitle: Row(
+            children: [
+              // Text(_history[index].id.toString()),
+              Text((index + 1).toString()),
+              SizedBox(
+                width: 10,
+              ),
+              Text(DateFormat('yyyy-MM-dd hh-mm-ss')
+                  .format(_history[index].createdAt)),
+            ],
+          ),
+          trailing: IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () {
+                int _removeIndex = index;
+                AnimatedListRemovedItemBuilder builder = (context, animation) {
+                  return _buildItem(index, animation);
+                };
+                _listAniKey.currentState!.removeItem(_removeIndex, builder);
+                deleteHistory(_history[_removeIndex].id);
+              }),
+        ),
+      ),
+    );
   }
 }
