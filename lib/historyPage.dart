@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:pass_gene/widgets/admobBanner.dart';
-import 'package:pass_gene/widgets/bottom_animation.dart';
 import 'isarDB/historyTable.dart';
 
 // import 'package:pass_gene/widgets/admobBanner.dart';
@@ -30,18 +29,10 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
   }
 
 // Animation
-  late BottonAnimationLogic bottonAnimationLogicScale;
-  @override
-  void initState() {
-    super.initState();
-    _refreshTable();
-    bottonAnimationLogicScale = BottonAnimationLogic(this);
-  }
 
   @override
   void dispose() {
     super.dispose();
-    bottonAnimationLogicScale.dispose();
   }
 
   final snackBar = SnackBar(
@@ -108,77 +99,74 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
     );
 
     return Scaffold(
-        backgroundColor: Colors.grey.shade300,
-        appBar: AppBar(
-          title: const Text('History'),
-        ),
-        body: Column(
-          children: [
-            adContainer,
-            (_history.length == 0)
-                ? Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 100, bottom: 20),
-                      child: Text('No randum word',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 30)),
-                    ),
-                  )
-                : Expanded(
-                    child: AnimatedList(
-                      key: _listAniKey,
-                      initialItemCount: _history.length,
-                      itemBuilder: (_, int index, Animation<double> animation) {
-                        return SizeTransition(
-                          key: UniqueKey(),
-                          sizeFactor: animation,
-                          child: Card(
-                            color: Colors.green.shade200,
-                            margin: const EdgeInsets.all(10),
-                            child: ListTile(
-                              // leading: Text(_history[index]['id'].toString()),
-                              title: SelectableText(_history[index].password),
-                              // subtitle: Text(_history[index]['createdAt'].toString()),
-                              subtitle: Row(
-                                children: [
-                                  // Text(_history[index].id.toString()),
-                                  Text(' '),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(DateFormat('yyyy-MM-dd HH-MM-ss')
-                                      .format(_history[index].createdAt)),
-                                ],
-                              ),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () => _removeItem(index),
-                              ),
+      backgroundColor: Colors.grey.shade300,
+      appBar: AppBar(
+        title: const Text('History'),
+      ),
+      body: Column(
+        children: [
+          adContainer,
+          (_history.length == 0)
+              ? Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 100, bottom: 20),
+                    child: Text('No randum word',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 30)),
+                  ),
+                )
+              : Expanded(
+                  child: AnimatedList(
+                    key: _listAniKey,
+                    initialItemCount: _history.length,
+                    itemBuilder: (_, int index, Animation<double> animation) {
+                      return SizeTransition(
+                        key: UniqueKey(),
+                        sizeFactor: animation,
+                        child: Card(
+                          color: Colors.green.shade200,
+                          margin: const EdgeInsets.all(10),
+                          child: ListTile(
+                            // leading: Text(_history[index]['id'].toString()),
+                            title: SelectableText(_history[index].password),
+                            // subtitle: Text(_history[index]['createdAt'].toString()),
+                            subtitle: Row(
+                              children: [
+                                // Text(_history[index].id.toString()),
+                                Text(' '),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(DateFormat('yyyy-MM-dd HH-MM-ss')
+                                    .format(_history[index].createdAt)),
+                              ],
+                            ),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () => _removeItem(index),
                             ),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   ),
-            Text(' The maximum number of saves is $maxSavedHistory.'),
-          ],
+                ),
+          Text(' The maximum number of saves is $maxSavedHistory.'),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton.large(
+        onPressed: () {
+          _deleteAllhistory();
+        },
+        // onPressed: _deleteAll,
+        backgroundColor: Colors.black,
+
+        child: Center(
+          child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [const Icon(Icons.delete_forever), Text('Delete All')]),
         ),
-        floatingActionButton: FloatingActionButton.large(
-          onPressed: () {
-            bottonAnimationLogicScale.start();
-            _deleteAllhistory();
-          },
-          // onPressed: _deleteAll,
-          backgroundColor: Colors.black,
-          child: ScaleTransition(
-            scale: bottonAnimationLogicScale.animationScale,
-            child: Center(
-              child: Column(mainAxisSize: MainAxisSize.min, children: [
-                const Icon(Icons.delete_forever),
-                Text('Delete All')
-              ]),
-            ),
-          ),
-        ));
+      ),
+    );
   }
 }
