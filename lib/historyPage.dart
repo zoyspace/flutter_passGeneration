@@ -106,7 +106,6 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
       width: myBanner.size.width.toDouble(),
       height: myBanner.size.height.toDouble(),
     );
-    print('build内');
 
     return Scaffold(
         backgroundColor: Colors.grey.shade300,
@@ -125,9 +124,7 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
                               fontWeight: FontWeight.bold, fontSize: 30)),
                     ),
                   )
-                // : Flexible(
                 : Expanded(
-                    // child: ListView.builder(
                     child: AnimatedList(
                       key: _listAniKey,
                       initialItemCount: _history.length,
