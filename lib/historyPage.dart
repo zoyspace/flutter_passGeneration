@@ -28,7 +28,11 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
     setState(() {});
   }
 
-// Animation
+  @override
+  void initState() {
+    super.initState();
+    _refreshTable();
+  }
 
   @override
   void dispose() {
