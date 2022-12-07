@@ -16,7 +16,7 @@ class HistoryPage extends ConsumerStatefulWidget {
 }
 
 class _HistoryPageState extends ConsumerState<HistoryPage>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   // admob
   final BannerAd myBanner = makeBannerAd();
 
@@ -177,9 +177,35 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
                     child: AnimatedList(
                       key: _listAniKey,
                       initialItemCount: _history.length,
-                      itemBuilder: (BuildContext context, int index,
-                          Animation<double> animation) {
-                        return _buildItem(index, animation);
+                      itemBuilder: (_, int index, Animation<double> animation) {
+                        return SizeTransition(
+                          key: UniqueKey(),
+                          sizeFactor: animation,
+                          child: Card(
+                            color: Colors.green.shade200,
+                            margin: const EdgeInsets.all(10),
+                            child: ListTile(
+                              // leading: Text(_history[index]['id'].toString()),
+                              title: SelectableText(_history[index].password),
+                              // subtitle: Text(_history[index]['createdAt'].toString()),
+                              subtitle: Row(
+                                children: [
+                                  // Text(_history[index].id.toString()),
+                                  Text(' '),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(DateFormat('yyyy-MM-dd HH-MM-ss')
+                                      .format(_history[index].createdAt)),
+                                ],
+                              ),
+                              trailing: IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () => _removeItem(index),
+                              ),
+                            ),
+                          ),
+                        );
                       },
                     ),
                   ),
@@ -205,39 +231,23 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
         ));
   }
 
-  Widget _buildItem(int index, Animation<double> animation) {
-    return SizeTransition(
-      sizeFactor: animation,
-      child: Card(
-        color: Colors.green.shade200,
-        margin: const EdgeInsets.all(10),
-        child: ListTile(
-          // leading: Text(_history[index]['id'].toString()),
-          title: SelectableText(_history[index].password),
-          // subtitle: Text(_history[index]['createdAt'].toString()),
-          subtitle: Row(
-            children: [
-              // Text(_history[index].id.toString()),
-              Text((index + 1).toString()),
-              SizedBox(
-                width: 10,
-              ),
-              Text(DateFormat('yyyy-MM-dd hh-mm-ss')
-                  .format(_history[index].createdAt)),
-            ],
+  void _removeItem(int index) {
+    _listAniKey.currentState!.removeItem(index, (_, animation) {
+      return SizeTransition(
+        sizeFactor: animation,
+        child: const Card(
+          margin: EdgeInsets.all(10),
+          elevation: 10,
+          color: Colors.pink,
+          child: ListTile(
+            contentPadding: EdgeInsets.all(15),
+            title: Text("removing", style: TextStyle(fontSize: 24)),
           ),
-          trailing: IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
-                int _removeIndex = index;
-                AnimatedListRemovedItemBuilder builder = (context, animation) {
-                  return _buildItem(index, animation);
-                };
-                _listAniKey.currentState!.removeItem(_removeIndex, builder);
-                deleteHistory(_history[_removeIndex].id);
-              }),
         ),
-      ),
-    );
+      );
+      ;
+    }, duration: const Duration(seconds: 1));
+
+    _deleteHistory(_history[index].id);
   }
 }
