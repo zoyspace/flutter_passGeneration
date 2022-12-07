@@ -21,16 +21,12 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
   final BannerAd myBanner = makeBannerAd();
 
   List<HistoryTable> _history = [];
-  // bool _isLoading = true;
-  // int _maxSavedNumber = 5;
+
+  final GlobalKey<AnimatedListState> _listAniKey = GlobalKey();
 
   void _refreshTable() async {
     _history = await getAllHistorys();
-    setState(() {
-      debugPrint('_refreshTable');
-
-      // _isLoading = false;
-    });
+    setState(() {});
   }
 
 // Animation
@@ -64,15 +60,6 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
         Text('Delete All !'),
       ]));
 
-  void get _deleteAll async {
-    // await HistoryViewModel.deleteAll();
-    ScaffoldMessenger.of(context).removeCurrentSnackBar(
-        // reason: SnackBarClosedReason.remove,
-        );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    _refreshTable();
-  }
-
   void _deleteHistory(id) async {
     await deleteHistory(id);
     _refreshTable();
@@ -87,58 +74,25 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  final GlobalKey<AnimatedListState> _listAniKey = GlobalKey();
+  void _removeItem(int index) {
+    _listAniKey.currentState!.removeItem(index, (_, animation) {
+      return SizeTransition(
+        sizeFactor: animation,
+        child: const Card(
+          margin: EdgeInsets.all(10),
+          elevation: 10,
+          color: Colors.redAccent,
+          child: ListTile(
+            contentPadding: EdgeInsets.all(15),
+            title: Text("removing", style: TextStyle(fontSize: 24)),
+          ),
+        ),
+      );
+      ;
+    }, duration: const Duration(seconds: 1));
 
-//   List _items = [];
-//   void _addItem() {
-//     _items.insert(0, "Item ${_items.length + 1}");
-//     _key.currentState!.insertItem(0, duration: const Duration(seconds: 1));
-//   }
-
-//   void _removeItem(int index) {
-//     _key.currentState!.removeItem(index, (_, animation) {
-//       return SizeTransition(
-//         sizeFactor: animation,
-//         child: const Card(
-//           margin: EdgeInsets.all(10),
-//           elevation: 10,
-//           color: Colors.purple,
-//           child: ListTile(
-//             contentPadding: EdgeInsets.all(15),
-//             title: Text("removing", style: TextStyle(fontSize: 24)),
-//           ),
-//         ),
-//       );
-//       ;
-//     }, duration: const Duration(seconds: 1));
-
-//     _items.removeAt(index);
-//   }
-// Widget AnimatedList(
-//         key: _key,
-//         initialItemCount: 0,
-//         padding: const EdgeInsets.all(10),
-//         itemBuilder: (_, index, animation) {
-//           return SizeTransition(
-//             key: UniqueKey(),
-//             sizeFactor: animation,
-//             child: Card(
-//               margin: const EdgeInsets.all(10),
-//               elevation: 10,
-//               color: Colors.blue,
-//               child: ListTile(
-//                 contentPadding: const EdgeInsets.all(15),
-//                 title:
-//                 Text(_items[index], style: const TextStyle(fontSize: 24, color: Colors.white)),
-//                 trailing: IconButton(
-//                   icon:  Icon(Icons.delete, color: Colors.redAccent.withOpacity(0.9),),
-//                   onPressed: () => _removeItem(index),
-//                 ),
-//               ),
-//             ),
-//           );
-//         },
-//       );
+    _deleteHistory(_history[index].id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -229,25 +183,5 @@ class _HistoryPageState extends ConsumerState<HistoryPage>
             ),
           ),
         ));
-  }
-
-  void _removeItem(int index) {
-    _listAniKey.currentState!.removeItem(index, (_, animation) {
-      return SizeTransition(
-        sizeFactor: animation,
-        child: const Card(
-          margin: EdgeInsets.all(10),
-          elevation: 10,
-          color: Colors.pink,
-          child: ListTile(
-            contentPadding: EdgeInsets.all(15),
-            title: Text("removing", style: TextStyle(fontSize: 24)),
-          ),
-        ),
-      );
-      ;
-    }, duration: const Duration(seconds: 1));
-
-    _deleteHistory(_history[index].id);
   }
 }
